@@ -2,6 +2,7 @@ package com.fuzzy.courses.domain.course;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fuzzy.courses.domain.collaborator.Collaborator;
+import com.fuzzy.courses.domain.courseCollaborator.CourseCollaborator;
 import com.fuzzy.courses.domain.modality.CourseModality;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -50,14 +51,8 @@ public class Course {
     @JoinColumn(name = "course_modality_id")
     private CourseModality courseModality;
 
-    @ManyToMany
-    @JoinTable(
-            name = "courses_collaborators",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "collaborator_id")
-    )
-    @JsonIgnore
-    private Set<Collaborator> collaborators = new HashSet<>();
+    @OneToMany(mappedBy = "id.course")
+    private Set<CourseCollaborator> courseCollaborators = new HashSet<>();
 
     public Course(String instructorName, String version, String title, String workload, String procedure, String description, LocalDate date, CourseModality courseModality) {
         this.instructorName = instructorName;

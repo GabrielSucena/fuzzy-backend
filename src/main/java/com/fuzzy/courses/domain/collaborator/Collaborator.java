@@ -2,6 +2,7 @@ package com.fuzzy.courses.domain.collaborator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fuzzy.courses.domain.course.Course;
+import com.fuzzy.courses.domain.courseCollaborator.CourseCollaborator;
 import com.fuzzy.courses.domain.department.CollaboratorDepartment;
 import com.fuzzy.courses.domain.position.CollaboratorPosition;
 import jakarta.persistence.*;
@@ -44,10 +45,6 @@ public class Collaborator {
     @ManyToOne
     @JoinColumn(name = "collaborator_department_id")
     private CollaboratorDepartment collaboratorDepartment;
-
-    @ManyToMany(mappedBy = "collaborators")
-    @JsonIgnore
-    private Set<Course> courses = new HashSet<>();
 
     public Collaborator(String fullName, String collaboratorRecord, String email, String phone, CollaboratorPosition collaboratorPosition, CollaboratorDepartment collaboratorDepartment) {
         this.fullName = fullName;

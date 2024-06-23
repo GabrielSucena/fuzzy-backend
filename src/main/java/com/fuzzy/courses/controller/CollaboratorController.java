@@ -75,25 +75,4 @@ public class CollaboratorController {
         return ResponseEntity.noContent().build();
     }
 
-    // Adicionar/Remover colaboradores vinculados a curos
-
-    @PatchMapping("/cursos/{id}")
-    @Transactional
-    public ResponseEntity addCourse(@PathVariable Long id, @RequestBody @Valid AddCourseDto dto){
-
-        collaboratorService.addCourse(id, dto);
-
-        return ResponseEntity.noContent().build();
-
-    }
-
-    @DeleteMapping("/cursos/{id}")
-    @Transactional
-    public ResponseEntity removeCollaboratorCourse(@PathVariable Long id, @RequestBody @Valid RemoveCourseDto dto) {
-
-        collaboratorService.removeCollaboratorCourse(id, dto);
-
-        return ResponseEntity.noContent().build();
-    }
-
 }

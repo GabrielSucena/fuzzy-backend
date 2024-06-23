@@ -71,16 +71,24 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
-    // Adicionar/Remover colaboradores vinculados a curos
+    // Adicionar/Remover colaboradores vinculados a cursos
 
-    @PatchMapping("/colaboradores/{id}")
+    @PutMapping("/colaboradores/{id}")
     @Transactional
     public ResponseEntity addCollaborator(@PathVariable Long id, @RequestBody @Valid AddCollaboratorDto dto){
 
         courseService.addCollaborator(id, dto);
 
         return ResponseEntity.noContent().build();
+    }
 
+    @PatchMapping("/colaboradores/{id}")
+    @Transactional
+    public ResponseEntity updateClassification(@PathVariable Long id, @RequestBody @Valid UpdateClassificationDto dto){
+
+        courseService.updateClassification(id, dto);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/colaboradores/{id}")
@@ -88,6 +96,15 @@ public class CourseController {
     public ResponseEntity removeCourseCollaborator(@PathVariable Long id, @RequestBody @Valid RemoveCollaboratorDto dto) {
 
         courseService.removeCourseCollaborator(id, dto);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/colaboradores/status/{id}")
+    @Transactional
+    public ResponseEntity updateStatus(@PathVariable Long id, @RequestBody @Valid UpdateStatusDto dto){
+
+        courseService.updateStatus(id, dto);
 
         return ResponseEntity.noContent().build();
     }

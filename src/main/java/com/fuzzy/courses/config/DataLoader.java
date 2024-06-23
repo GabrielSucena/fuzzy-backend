@@ -1,11 +1,11 @@
 package com.fuzzy.courses.config;
 
+import com.fuzzy.courses.domain.courseClassification.CourseClassification;
+import com.fuzzy.courses.domain.courseStatus.CourseStatus;
 import com.fuzzy.courses.domain.department.CollaboratorDepartment;
 import com.fuzzy.courses.domain.modality.CourseModality;
 import com.fuzzy.courses.domain.position.CollaboratorPosition;
-import com.fuzzy.courses.repository.CollaboratorDepartmentRepository;
-import com.fuzzy.courses.repository.CollaboratorPositionRepository;
-import com.fuzzy.courses.repository.CourseModalityRepository;
+import com.fuzzy.courses.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +24,12 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private CourseModalityRepository courseModalityRepository;
 
+    @Autowired
+    private CourseClassificationRepository classificationRepository;
+
+    @Autowired
+    private CourseStatusRepository statusRepository;
+
     @Override
     public void run(String... args) throws Exception {
         Arrays.stream(CollaboratorPosition.Positions.values())
@@ -34,6 +40,12 @@ public class DataLoader implements CommandLineRunner {
 
         Arrays.stream(CourseModality.Modalities.values())
                 .forEach(courseModality -> courseModalityRepository.save(courseModality.get()));
+
+        Arrays.stream(CourseClassification.Classifications.values())
+                .forEach(courseClassification -> classificationRepository.save(courseClassification.get()));
+
+        Arrays.stream(CourseStatus.Status.values())
+                .forEach(courseStatus -> statusRepository.save(courseStatus.get()));
     }
 
 }

@@ -79,42 +79,4 @@ public class CollaboratorService {
                 })
                 .orElseThrow( () -> new FuzzyNotFoundException("Collaborator with id " + id + " not found"));
     }
-
-    public void addCourse(Long id, AddCourseDto dto) {
-
-        var courseIsPresent = courseRepository.findById(dto.courseId());
-
-        if (courseIsPresent.isEmpty()){
-            throw new FuzzyNotFoundException("Course with id " + dto.courseId() + " not found");
-        }
-
-        var collaborator = collaboratorRepository.getReferenceById(id);
-
-        courseRepository.findById(dto.courseId())
-                .map( courseSave -> {
-                    courseSave.getCollaborators().add(collaborator);
-                    return courseRepository.save(courseSave);
-                })
-                .orElseThrow( () -> new FuzzyException());
-
-    }
-
-    public void removeCollaboratorCourse(Long id, RemoveCourseDto dto) {
-
-        var courseIsPresent = courseRepository.findById(dto.courseId());
-
-        if (courseIsPresent.isEmpty()){
-            throw new FuzzyNotFoundException("Course with id " + dto.courseId() + " not found");
-        }
-
-        var collaborator = collaboratorRepository.getReferenceById(id);
-
-        courseRepository.findById(dto.courseId())
-                .map( courseDelete -> {
-                    courseDelete.getCollaborators().remove(collaborator);
-                    return courseRepository.save(courseDelete);
-                })
-                .orElseThrow(() -> new FuzzyException());
-
-    }
 }
