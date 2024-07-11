@@ -1,10 +1,12 @@
 package com.fuzzy.courses.config;
 
+import com.fuzzy.courses.domain.codification.Codification;
 import com.fuzzy.courses.domain.courseClassification.CourseClassification;
 import com.fuzzy.courses.domain.courseStatus.CourseStatus;
-import com.fuzzy.courses.domain.department.CollaboratorDepartment;
-import com.fuzzy.courses.domain.modality.CourseModality;
-import com.fuzzy.courses.domain.position.CollaboratorPosition;
+import com.fuzzy.courses.domain.department.Department;
+import com.fuzzy.courses.domain.modality.Modality;
+import com.fuzzy.courses.domain.position.Position;
+import com.fuzzy.courses.domain.validity.Validity;
 import com.fuzzy.courses.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -16,13 +18,13 @@ import java.util.Arrays;
 public class DataLoader implements CommandLineRunner {
 
     @Autowired
-    private CollaboratorPositionRepository collaboratorPositionRepository;
+    private PositionRepository positionRepository;
 
     @Autowired
-    private CollaboratorDepartmentRepository collaboratorDepartmentRepository;
+    private DepartmentRepository departmentRepository;
 
     @Autowired
-    private CourseModalityRepository courseModalityRepository;
+    private ModalityRepository modalityRepository;
 
     @Autowired
     private CourseClassificationRepository classificationRepository;
@@ -30,22 +32,35 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private CourseStatusRepository statusRepository;
 
+    @Autowired
+    private CodificationRepository codificationRepository;
+
+    @Autowired
+    private ValidityRepository validityRepository;
+
     @Override
     public void run(String... args) throws Exception {
-        Arrays.stream(CollaboratorPosition.Positions.values())
-                .forEach(collaboratorPosition -> collaboratorPositionRepository.save(collaboratorPosition.get()));
+        Arrays.stream(Position.Positions.values())
+                .forEach(position -> positionRepository.save(position.get()));
 
-        Arrays.stream(CollaboratorDepartment.Departments.values())
-                .forEach(collaboratorDepartments -> collaboratorDepartmentRepository.save(collaboratorDepartments.get()));
+        Arrays.stream(Department.Departments.values())
+                .forEach(departments -> departmentRepository.save(departments.get()));
 
-        Arrays.stream(CourseModality.Modalities.values())
-                .forEach(courseModality -> courseModalityRepository.save(courseModality.get()));
+        Arrays.stream(Modality.Modalities.values())
+                .forEach(modality -> modalityRepository.save(modality.get()));
 
         Arrays.stream(CourseClassification.Classifications.values())
                 .forEach(courseClassification -> classificationRepository.save(courseClassification.get()));
 
         Arrays.stream(CourseStatus.Status.values())
                 .forEach(courseStatus -> statusRepository.save(courseStatus.get()));
+
+        Arrays.stream(Codification.Codings.values())
+                .forEach(codings -> codificationRepository.save(codings.get()));
+
+        Arrays.stream(Validity.Validities.values())
+                .forEach(validities -> validityRepository.save(validities.get()));
+
     }
 
 }

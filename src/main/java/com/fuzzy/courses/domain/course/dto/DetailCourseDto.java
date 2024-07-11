@@ -15,11 +15,14 @@ public record DetailCourseDto(
         String workload,
         LocalDate date,
         String version,
+        String modality,
+        String validity,
+        String codification,
         Set<CourseCollaborator> listCourseCollaborators
 ) {
 
     public DetailCourseDto (Course course) {
-        this(course.getId(), course.getTitle(), course.getProcedure(), course.getInstructorName(), course.getWorkload(), course.getDate(), course.getVersion(), course.getCourseCollaborators());
+        this(course.getId(), course.getTitle(), course.getProcedure(), course.getInstructorName(), course.getWorkload(), course.getDate(), course.getVersion(), course.getModality().getModality(), course.getValidity().getValidity(), course.getCodification().getCodification(), course.getCourseCollaborators());
     }
 
 }

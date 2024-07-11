@@ -5,14 +5,11 @@ import com.fuzzy.courses.domain.course.dto.*;
 import com.fuzzy.courses.domain.courseCollaborator.CourseCollaborator;
 import com.fuzzy.courses.domain.courseStatus.CourseStatus;
 import com.fuzzy.courses.domain.pk.CourseCollaboratorPK;
-import com.fuzzy.courses.exception.FuzzyException;
 import com.fuzzy.courses.exception.FuzzyNotFoundException;
 import com.fuzzy.courses.repository.CollaboratorRepository;
 import com.fuzzy.courses.repository.CourseCollaboratorRepository;
 import com.fuzzy.courses.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,18 +55,19 @@ public class CourseService {
 
     }
 
-    public void updateCourse(Long id, RegisterCourseDto dto) {
+    public void updateCourse(Long id, UpdateCourseDto dto) {
 
         courseRepository.findById(id)
                 .map(course -> {
                     course.setInstructorName(dto.instructorName());
-                    course.setVersion(dto.version());
                     course.setTitle(dto.title());
                     course.setWorkload(dto.workload());
                     course.setProcedure(dto.procedure());
                     course.setDescription(dto.description());
                     course.setDate(dto.date());
-                    course.setCourseModality(dto.courseModality().get());
+                    course.setModality(dto.modality().get());
+                    course.setValidity(dto.validities().get());
+                    course.setCodification(dto.codings().get());
                     return courseRepository.save(course);
                 })
                 .orElseThrow(() -> new FuzzyNotFoundException("Course with id " + id + " not found"));

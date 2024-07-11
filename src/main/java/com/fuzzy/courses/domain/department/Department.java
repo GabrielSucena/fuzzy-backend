@@ -1,6 +1,5 @@
 package com.fuzzy.courses.domain.department;
 
-import com.fuzzy.courses.domain.position.CollaboratorPosition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,12 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "collaborator_departments")
+@Table(name = "departments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CollaboratorDepartment {
+public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +32,8 @@ public class CollaboratorDepartment {
         private Long id;
         private String department;
 
-        public CollaboratorDepartment get(){
-            return new CollaboratorDepartment(id, department);
+        public Department get(){
+            return new Department(id, department);
         }
     }
 

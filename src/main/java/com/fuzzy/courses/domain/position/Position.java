@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "collaborator_positions")
+@Table(name = "positions")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CollaboratorPosition {
+public class Position {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,8 @@ public class CollaboratorPosition {
         private Long id;
         private String position;
 
-        public CollaboratorPosition get(){
-            return new CollaboratorPosition(id, position);
+        public Position get(){
+            return new Position(id, position);
         }
     }
 

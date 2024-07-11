@@ -6,12 +6,12 @@ public record ListCollaboratorsDto(
         Long id,
         String collaboratorRecord,
         String fullName,
-        String collaboratorDepartment,
-        String collaboratorPosition
+        String department,
+        String position
 ) {
 
     public ListCollaboratorsDto(Collaborator collaborator){
-        this(collaborator.getId(), collaborator.getCollaboratorRecord(), collaborator.getFullName(), collaborator.getCollaboratorDepartment().getDepartment(), collaborator.getCollaboratorPosition().getPosition());
+        this(collaborator.getId(), collaborator.getCollaboratorRecord(), collaborator.getFullName(), collaborator.getDepartment().getDepartment(), collaborator.getPosition().getPosition());
     }
 
 }

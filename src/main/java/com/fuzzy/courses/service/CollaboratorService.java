@@ -3,13 +3,10 @@ package com.fuzzy.courses.service;
 import com.fuzzy.courses.domain.collaborator.Collaborator;
 import com.fuzzy.courses.domain.collaborator.dto.*;
 import com.fuzzy.courses.exception.CollaboratorDataAlredyExistsException;
-import com.fuzzy.courses.exception.FuzzyException;
 import com.fuzzy.courses.exception.FuzzyNotFoundException;
 import com.fuzzy.courses.repository.CollaboratorRepository;
 import com.fuzzy.courses.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,8 +24,8 @@ public class CollaboratorService {
 
     public Collaborator registerCollaborator(RegisterCollaboratorDto dto) {
 
-        var collaboratorDb = collaboratorRepository.findByCollaboratorRecordOrEmail(dto.collaboratorRecord(), dto.email());
-        if (collaboratorDb.isPresent()) {
+        var collaborator = collaboratorRepository.findByCollaboratorRecordOrEmail(dto.collaboratorRecord(), dto.email());
+        if (collaborator.isPresent()) {
             throw new CollaboratorDataAlredyExistsException("Record or email alredy exists!");
         }
 
@@ -55,16 +52,14 @@ public class CollaboratorService {
     }
 
 
-    public void updateCollaborator(Long id, RegisterCollaboratorDto dto) {
+    public void updateCollaborator(Long id, UpdateCollaboratorDto dto) {
 
         collaboratorRepository.findById(id)
                 .map(collaborator -> {
                     collaborator.setFullName(dto.fullName());
-                    collaborator.setCollaboratorPosition(dto.collaboratorPosition().get());
-                    collaborator.setCollaboratorDepartment(dto.collaboratorDepartment().get());
-                    collaborator.setCollaboratorRecord(dto.collaboratorRecord());
+                    collaborator.setPosition(dto.position().get());
+                    collaborator.setDepartment(dto.department().get());
                     collaborator.setEmail(dto.email());
-                    collaborator.setPhone(dto.phone());
                     return collaboratorRepository.save(collaborator);
                 })
                 .orElseThrow(() -> new FuzzyNotFoundException("Collaborator with id " + id + " not found"));

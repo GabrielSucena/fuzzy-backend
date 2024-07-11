@@ -1,6 +1,5 @@
 package com.fuzzy.courses.domain.courseClassification;
 
-import com.fuzzy.courses.domain.department.CollaboratorDepartment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

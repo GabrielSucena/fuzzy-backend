@@ -11,12 +11,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record RegisterCourseDto(
+public record UpdateCourseDto(
 
         @NotBlank
         String instructorName,
-        @NotBlank
-        String version,
         @NotBlank
         String title,
         @NotBlank
@@ -39,7 +37,6 @@ public record RegisterCourseDto(
     public Course toCourse() {
         return new Course(
                 instructorName,
-                version,
                 title,
                 workload,
                 procedure,

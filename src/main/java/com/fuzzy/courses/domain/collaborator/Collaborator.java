@@ -1,18 +1,12 @@
 package com.fuzzy.courses.domain.collaborator;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fuzzy.courses.domain.course.Course;
-import com.fuzzy.courses.domain.courseCollaborator.CourseCollaborator;
-import com.fuzzy.courses.domain.department.CollaboratorDepartment;
-import com.fuzzy.courses.domain.position.CollaboratorPosition;
+import com.fuzzy.courses.domain.department.Department;
+import com.fuzzy.courses.domain.position.Position;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "collaborators")
@@ -35,23 +29,19 @@ public class Collaborator {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "phone")
-    private String phone;
+    @ManyToOne
+    @JoinColumn(name = "position_id")
+    private Position position;
 
     @ManyToOne
-    @JoinColumn(name = "collaborator_position_id")
-    private CollaboratorPosition collaboratorPosition;
+    @JoinColumn(name = "department_id")
+    private Department department;
 
-    @ManyToOne
-    @JoinColumn(name = "collaborator_department_id")
-    private CollaboratorDepartment collaboratorDepartment;
-
-    public Collaborator(String fullName, String collaboratorRecord, String email, String phone, CollaboratorPosition collaboratorPosition, CollaboratorDepartment collaboratorDepartment) {
+    public Collaborator(String fullName, String collaboratorRecord, String email, Position position, Department department) {
         this.fullName = fullName;
         this.collaboratorRecord = collaboratorRecord;
         this.email = email;
-        this.phone = phone;
-        this.collaboratorPosition = collaboratorPosition;
-        this.collaboratorDepartment = collaboratorDepartment;
+        this.position = position;
+        this.department = department;
     }
 }

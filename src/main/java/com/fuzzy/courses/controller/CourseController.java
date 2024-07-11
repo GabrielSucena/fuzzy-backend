@@ -5,10 +5,6 @@ import com.fuzzy.courses.service.CourseService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -54,7 +50,7 @@ public class CourseController {
 
     @PutMapping("{id}")
     @Transactional
-    public ResponseEntity updateCourse(@PathVariable Long id, @RequestBody @Valid RegisterCourseDto dto) {
+    public ResponseEntity updateCourse(@PathVariable Long id, @RequestBody @Valid UpdateCourseDto dto) {
 
         courseService.updateCourse(id, dto);
 

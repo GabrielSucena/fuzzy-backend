@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "course_modalities")
+@Table(name = "modalities")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CourseModality {
+public class Modality {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,8 @@ public class CourseModality {
         private Long id;
         private String modality;
 
-        public CourseModality get(){
-            return new CourseModality(id, modality);
+        public Modality get(){
+            return new Modality(id, modality);
         }
     }
 

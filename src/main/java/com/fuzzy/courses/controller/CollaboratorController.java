@@ -1,17 +1,10 @@
 package com.fuzzy.courses.controller;
 
-import com.fuzzy.courses.domain.collaborator.Collaborator;
 import com.fuzzy.courses.domain.collaborator.dto.*;
-import com.fuzzy.courses.domain.course.dto.RemoveCollaboratorDto;
-import com.fuzzy.courses.repository.CollaboratorRepository;
 import com.fuzzy.courses.service.CollaboratorService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -20,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/colaboradores")
-@CrossOrigin("*")
 public class CollaboratorController {
 
     @Autowired
@@ -58,7 +50,7 @@ public class CollaboratorController {
 
     @PutMapping("{id}")
     @Transactional
-    public ResponseEntity updateCollaborator(@PathVariable Long id, @RequestBody @Valid RegisterCollaboratorDto dto) {
+    public ResponseEntity updateCollaborator(@PathVariable Long id, @RequestBody @Valid UpdateCollaboratorDto dto) {
 
         collaboratorService.updateCollaborator(id, dto);
 
