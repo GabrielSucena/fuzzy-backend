@@ -67,4 +67,14 @@ public class CollaboratorController {
         return ResponseEntity.noContent().build();
     }
 
+
+    @GetMapping("/cursos/{id}")
+    public ResponseEntity<List<ListCoursesCollaboratorDto>> listCourses(@PathVariable Long id){
+
+        var courses = collaboratorService.listCourses(id);
+
+        return ResponseEntity.ok(courses);
+
+    }
+
 }

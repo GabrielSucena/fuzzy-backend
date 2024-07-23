@@ -5,6 +5,7 @@ import com.fuzzy.courses.domain.collaborator.dto.*;
 import com.fuzzy.courses.exception.CollaboratorDataAlredyExistsException;
 import com.fuzzy.courses.exception.FuzzyNotFoundException;
 import com.fuzzy.courses.repository.CollaboratorRepository;
+import com.fuzzy.courses.repository.CourseCollaboratorRepository;
 import com.fuzzy.courses.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class CollaboratorService {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private CourseCollaboratorRepository courseCollaboratorRepository;
 
     public Collaborator registerCollaborator(RegisterCollaboratorDto dto) {
 
@@ -73,5 +77,12 @@ public class CollaboratorService {
                     return Void.TYPE;
                 })
                 .orElseThrow( () -> new FuzzyNotFoundException("Collaborator with id " + id + " not found"));
+    }
+
+    public List<ListCoursesCollaboratorDto> listCourses(Long id) {
+
+        var courses = courseCollaboratorRepository.listCourses(id);
+
+        return courses;
     }
 }
