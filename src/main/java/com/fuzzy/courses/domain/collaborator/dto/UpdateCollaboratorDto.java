@@ -8,13 +8,10 @@ import jakarta.validation.constraints.NotNull;
 
 public record UpdateCollaboratorDto(
         @NotBlank
-        String fullName,
-        @NotBlank
-        @Email
-        String email,
+        String name,
         @NotNull
-        Position.Positions position,
+        Long positionId,
         @NotNull
-        Department.Departments department
+        Long departmentId
 ) {
 }

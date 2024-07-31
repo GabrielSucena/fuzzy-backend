@@ -1,13 +1,15 @@
 package com.fuzzy.courses.domain.courseCollaborator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fuzzy.courses.domain.classification.Classification;
 import com.fuzzy.courses.domain.collaborator.Collaborator;
 import com.fuzzy.courses.domain.course.Course;
-import com.fuzzy.courses.domain.courseClassification.CourseClassification;
-import com.fuzzy.courses.domain.courseStatus.CourseStatus;
-import com.fuzzy.courses.domain.pk.CourseCollaboratorPK;
+import com.fuzzy.courses.domain.courseCollaborator.pk.CourseCollaboratorPK;
+import com.fuzzy.courses.domain.status.Status;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDate;
 
 
 @EqualsAndHashCode
@@ -19,21 +21,24 @@ public class CourseCollaborator {
     private CourseCollaboratorPK id = new CourseCollaboratorPK();
 
     @ManyToOne
-    @JoinColumn(name = "course_classification_id")
-    private CourseClassification courseClassification;
+    @JoinColumn(name = "classification_id")
+    private Classification classification;
 
     @ManyToOne
-    @JoinColumn(name = "course_status_id")
-    private CourseStatus courseStatus;
+    @JoinColumn(name = "status_id")
+    private Status status;
+
+    @JoinColumn(name = "completed_date")
+    private LocalDate completedDate;
 
     public CourseCollaborator() {
     }
 
-    public CourseCollaborator(Course course, Collaborator collaborator, CourseClassification courseClassification, CourseStatus courseStatus) {
+    public CourseCollaborator(Course course, Collaborator collaborator, Classification classification, Status status) {
         id.setCourse(course);
         id.setCollaborator(collaborator);
-        this.courseClassification = courseClassification;
-        this.courseStatus = courseStatus;
+        this.classification = classification;
+        this.status = status;
     }
 
     public CourseCollaborator(Course course, Collaborator collaborator) {
@@ -58,19 +63,27 @@ public class CourseCollaborator {
         id.setCollaborator(collaborator);
     }
 
-    public CourseClassification getCourseClassification() {
-        return courseClassification;
+    public Classification getClassification() {
+        return classification;
     }
 
-    public CourseStatus getCourseStatus() {
-        return courseStatus;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setCourseClassification(CourseClassification courseClassification) {
-        this.courseClassification = courseClassification;
+    public void setClassification(Classification classification) {
+        this.classification = classification;
     }
 
-    public void setCourseStatus(CourseStatus courseStatus) {
-        this.courseStatus = courseStatus;
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setCompletedDate(LocalDate completedDate) {
+        this.completedDate = completedDate;
+    }
+
+    public LocalDate getCompletedDate() {
+        return completedDate;
     }
 }

@@ -1,4 +1,4 @@
-package com.fuzzy.courses.domain.pk;
+package com.fuzzy.courses.domain.courseCollaborator.pk;
 
 import com.fuzzy.courses.domain.collaborator.Collaborator;
 import com.fuzzy.courses.domain.course.Course;

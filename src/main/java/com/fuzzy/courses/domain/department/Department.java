@@ -18,23 +18,7 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "department")
     private String department;
-
-    public enum Departments {
-
-        PeD(1L, "PeD");
-
-        Departments(long id, String department) {
-            this.id = id;
-            this.department = department;
-        }
-
-        private Long id;
-        private String department;
-
-        public Department get(){
-            return new Department(id, department);
-        }
-    }
 
 }

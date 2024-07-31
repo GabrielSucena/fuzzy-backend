@@ -1,8 +1,8 @@
-package com.fuzzy.courses.domain.course.dto;
+package com.fuzzy.courses.domain.course.dto.courseCollaborator;
 
 import jakarta.validation.constraints.NotNull;
 
-public record UpdateStatusDto(
+public record AddCollaboratorDto(
         @NotNull
         Long collaboratorId
 ) {

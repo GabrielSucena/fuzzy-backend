@@ -1,6 +1,10 @@
 package com.fuzzy.courses.controller;
 
-import com.fuzzy.courses.domain.collaborator.dto.*;
+import com.fuzzy.courses.domain.collaborator.Collaborator;
+import com.fuzzy.courses.domain.collaborator.dto.DetailCollaboratorDto;
+import com.fuzzy.courses.domain.collaborator.dto.ListCollaboratorsDto;
+import com.fuzzy.courses.domain.collaborator.dto.RegisterCollaboratorDto;
+import com.fuzzy.courses.domain.collaborator.dto.UpdateCollaboratorDto;
 import com.fuzzy.courses.service.CollaboratorService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -20,13 +24,13 @@ public class CollaboratorController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity registerCollaborator(@RequestBody @Valid RegisterCollaboratorDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<RegisterCollaboratorDto> registerCollaborator(@RequestBody @Valid RegisterCollaboratorDto dto, UriComponentsBuilder uriBuilder) {
 
         var collaborator = collaboratorService.registerCollaborator(dto);
 
         var uri = uriBuilder.path("/colaboradores/{id}").buildAndExpand(collaborator.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(collaborator);
+        return ResponseEntity.created(uri).body(dto);
 
     }
 
@@ -50,7 +54,7 @@ public class CollaboratorController {
 
     @PutMapping("{id}")
     @Transactional
-    public ResponseEntity updateCollaborator(@PathVariable Long id, @RequestBody @Valid UpdateCollaboratorDto dto) {
+    public ResponseEntity<UpdateCollaboratorDto> updateCollaborator(@PathVariable Long id, @RequestBody @Valid UpdateCollaboratorDto dto) {
 
         collaboratorService.updateCollaborator(id, dto);
 
@@ -60,21 +64,11 @@ public class CollaboratorController {
 
     @DeleteMapping("{id}")
     @Transactional
-    public ResponseEntity deleteCollaborator(@PathVariable Long id) {
+    public ResponseEntity<Collaborator> deleteCollaborator(@PathVariable Long id) {
 
         collaboratorService.deleteCollaborator(id);
 
         return ResponseEntity.noContent().build();
-    }
-
-
-    @GetMapping("/cursos/{id}")
-    public ResponseEntity<List<ListCoursesCollaboratorDto>> listCourses(@PathVariable Long id){
-
-        var courses = collaboratorService.listCourses(id);
-
-        return ResponseEntity.ok(courses);
-
     }
 
 }

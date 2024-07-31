@@ -1,6 +1,13 @@
 package com.fuzzy.courses.controller;
 
-import com.fuzzy.courses.domain.course.dto.*;
+import com.fuzzy.courses.domain.course.Course;
+import com.fuzzy.courses.domain.course.dto.DetailCourseDto;
+import com.fuzzy.courses.domain.course.dto.ListCoursesDto;
+import com.fuzzy.courses.domain.course.dto.RegisterCourseDto;
+import com.fuzzy.courses.domain.course.dto.UpdateCourseDto;
+import com.fuzzy.courses.domain.course.dto.courseCollaborator.AddCollaboratorDto;
+import com.fuzzy.courses.domain.course.dto.courseCollaborator.RemoveCollaboratorDto;
+import com.fuzzy.courses.domain.course.dto.courseCollaborator.UpdateClassificationAndStatusDto;
 import com.fuzzy.courses.service.CourseService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -20,13 +27,13 @@ public class CourseController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity registerCourse(@RequestBody @Valid RegisterCourseDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<RegisterCourseDto> registerCourse(@RequestBody @Valid RegisterCourseDto dto, UriComponentsBuilder uriBuilder) {
 
         var course = courseService.registerCourse(dto);
 
         var uri = uriBuilder.path("/cursos/{id}").buildAndExpand(course.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(course);
+        return ResponseEntity.created(uri).body(dto);
 
     }
 
@@ -50,7 +57,7 @@ public class CourseController {
 
     @PutMapping("{id}")
     @Transactional
-    public ResponseEntity updateCourse(@PathVariable Long id, @RequestBody @Valid UpdateCourseDto dto) {
+    public ResponseEntity<UpdateCourseDto> updateCourse(@PathVariable Long id, @RequestBody @Valid UpdateCourseDto dto) {
 
         courseService.updateCourse(id, dto);
 
@@ -60,7 +67,7 @@ public class CourseController {
 
     @DeleteMapping("{id}")
     @Transactional
-    public ResponseEntity deleteCourse(@PathVariable Long id) {
+    public ResponseEntity<Course> deleteCourse(@PathVariable Long id) {
 
         courseService.deleteCourse(id);
 
@@ -69,20 +76,11 @@ public class CourseController {
 
     // Adicionar/Remover colaboradores vinculados a cursos
 
-    @PutMapping("/colaboradores/{id}")
+    @PostMapping("/colaboradores/{id}")
     @Transactional
     public ResponseEntity addCollaborator(@PathVariable Long id, @RequestBody @Valid AddCollaboratorDto dto){
 
         courseService.addCollaborator(id, dto);
-
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/colaboradores/{id}")
-    @Transactional
-    public ResponseEntity updateClassification(@PathVariable Long id, @RequestBody @Valid UpdateClassificationDto dto){
-
-        courseService.updateClassification(id, dto);
 
         return ResponseEntity.noContent().build();
     }
@@ -96,12 +94,14 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/colaboradores/status/{id}")
+    @PatchMapping("/colaboradores/{id}")
     @Transactional
-    public ResponseEntity updateStatus(@PathVariable Long id, @RequestBody @Valid UpdateStatusDto dto){
+    public ResponseEntity updateClassificationAndStatus(@PathVariable Long id, @RequestBody @Valid UpdateClassificationAndStatusDto dto){
 
-        courseService.updateStatus(id, dto);
+        courseService.updateClassificationAndStatus(id, dto);
 
         return ResponseEntity.noContent().build();
     }
+
+
 }

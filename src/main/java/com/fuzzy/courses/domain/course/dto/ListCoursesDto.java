@@ -8,13 +8,15 @@ public record ListCoursesDto(
         Long id,
         String title,
         String procedure,
-        String instructorName,
+        String instructor,
         String workload,
-        LocalDate date,
+        LocalDate startDate,
+        LocalDate endDate,
         String version
 ) {
 
     public ListCoursesDto (Course course) {
-        this(course.getId(), course.getTitle(), course.getProcedure(), course.getInstructorName(), course.getWorkload(), course.getDate(), course.getVersion());
+        this(course.getId(), course.getTitle(), course.getProcedure(), course.getInstructor(), course.getWorkload(), course.getStartDate(), course.endDate() ,course.getVersion());
     }
+
 }

@@ -18,23 +18,7 @@ public class Codification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "codification")
     private String codification;
-
-    public enum Codings {
-
-        CAD(1L, "CAD");
-
-        Codings(long id, String codification) {
-            this.id = id;
-            this.codification = codification;
-        }
-
-        private Long id;
-        private String codification;
-
-        public Codification get(){
-            return new Codification(id, codification);
-        }
-    }
 
 }

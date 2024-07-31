@@ -1,4 +1,4 @@
-package com.fuzzy.courses.domain.course.dto;
+package com.fuzzy.courses.domain.course.dto.courseCollaborator;
 
 import jakarta.validation.constraints.NotNull;
 

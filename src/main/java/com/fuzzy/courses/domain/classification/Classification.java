@@ -1,4 +1,4 @@
-package com.fuzzy.courses.domain.modality;
+package com.fuzzy.courses.domain.classification;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,18 +7,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "modalities")
+@Table(name = "classifications")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Modality {
+public class Classification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "modality")
-    private String modality;
+    @Column(name = "classification")
+    private String classification;
 
 }

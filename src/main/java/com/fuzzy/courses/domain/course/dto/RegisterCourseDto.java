@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fuzzy.courses.domain.codification.Codification;
 import com.fuzzy.courses.domain.course.Course;
 import com.fuzzy.courses.domain.modality.Modality;
-import com.fuzzy.courses.domain.validity.Validity;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,42 +11,49 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record RegisterCourseDto(
-
         @NotBlank
-        String instructorName,
+        String instructor,
+
         @NotBlank
         String version,
+
         @NotBlank
         String title,
+
         @NotBlank
         String workload,
+
         @NotBlank
         String procedure,
-        @NotBlank
+
         String description,
-        @Future
+
         @JsonFormat(pattern = "dd/MM/yyyy")
-        LocalDate date,
+                @NotNull
+        LocalDate startDate,
+
         @NotNull
-        Modality.Modalities modality,
+        Integer validityYears,
+
         @NotNull
-        Validity.Validities validities,
+        Long modalityId,
+
         @NotNull
-        Codification.Codings codings
+        Long codingsId
 ) {
 
-    public Course toCourse() {
+    public Course toCourse(Modality modality, Codification codification) {
         return new Course(
-                instructorName,
+                instructor,
                 version,
                 title,
                 workload,
                 procedure,
                 description,
-                date,
-                modality.get(),
-                validities.get(),
-                codings.get()
+                startDate,
+                validityYears,
+                modality,
+                codification
         );
     }
 

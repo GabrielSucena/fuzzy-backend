@@ -1,6 +1,5 @@
 package com.fuzzy.courses.domain.collaborator.dto;
 
-
 import com.fuzzy.courses.domain.collaborator.Collaborator;
 import com.fuzzy.courses.domain.department.Department;
 import com.fuzzy.courses.domain.position.Position;
@@ -11,26 +10,31 @@ import jakarta.validation.constraints.Pattern;
 
 public record RegisterCollaboratorDto(
         @NotBlank
-        String fullName,
+        String name,
+
         @NotBlank
         @Pattern(regexp = "\\d{5}")
-        String collaboratorRecord,
+        String register,
+
         @NotBlank
         @Email
         String email,
+
         @NotNull
-        Position.Positions position,
+        Long positionId,
+
         @NotNull
-        Department.Departments department
+        Long departmentId
 ) {
 
-    public Collaborator toCollaborator() {
-        return new Collaborator(
-                fullName,
-                collaboratorRecord,
-                email,
-                position.get(),
-                department.get()
-        );
-    }
+        public Collaborator toCollaborator(Position position, Department department) {
+                return new Collaborator(
+                        name,
+                        register,
+                        email,
+                        position,
+                        department
+                );
+        }
+
 }

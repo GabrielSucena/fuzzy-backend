@@ -3,10 +3,7 @@ package com.fuzzy.courses.domain.collaborator;
 import com.fuzzy.courses.domain.department.Department;
 import com.fuzzy.courses.domain.position.Position;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "collaborators")
@@ -20,11 +17,11 @@ public class Collaborator {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "full_name")
-    private String fullName;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "collaborator_record", unique = true)
-    private String collaboratorRecord;
+    @Column(name = "register", unique = true)
+    private String register;
 
     @Column(name = "email", unique = true)
     private String email;
@@ -37,9 +34,9 @@ public class Collaborator {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    public Collaborator(String fullName, String collaboratorRecord, String email, Position position, Department department) {
-        this.fullName = fullName;
-        this.collaboratorRecord = collaboratorRecord;
+    public Collaborator(String name, String register, String email, Position position, Department department) {
+        this.name = name;
+        this.register = register;
         this.email = email;
         this.position = position;
         this.department = department;
