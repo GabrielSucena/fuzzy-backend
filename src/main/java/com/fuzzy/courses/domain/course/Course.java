@@ -1,8 +1,5 @@
 package com.fuzzy.courses.domain.course;
-
-import com.fuzzy.courses.domain.codification.Codification;
 import com.fuzzy.courses.domain.courseCollaborator.CourseCollaborator;
-import com.fuzzy.courses.domain.modality.Modality;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,8 +36,8 @@ public class Course {
     @Column(name = "workload")
     private String workload;
 
-    @Column(name = "course_procedure")
-    private String procedure;
+    @Column(name = "codification")
+    private String codification;
 
     @Column(name = "description")
     private String description;
@@ -55,31 +52,21 @@ public class Course {
     @CreationTimestamp
     private Instant createdOn;
 
-    @ManyToOne
-    @JoinColumn(name = "modality_id")
-    private Modality modality;
-
-    @ManyToOne
-    @JoinColumn(name = "codification_id")
-    private Codification codification;
-
     @OneToMany(mappedBy = "id.course")
     private Set<CourseCollaborator> courseCollaborators = new HashSet<>();
 
-    public Course(String instructor, String version, String title, String workload, String procedure, String description, LocalDate startDate, Integer validityYears, Modality modality, Codification codification) {
+    public Course(String instructor, String version, String title, String workload, String codification, String description, LocalDate startDate, Integer validityYears) {
         this.instructor = instructor;
         this.version = version;
         this.title = title;
         this.workload = workload;
-        this.procedure = procedure;
+        this.codification = codification;
         this.description = description;
         this.startDate = startDate;
         this.validityYears = validityYears;
-        this.modality = modality;
-        this.codification = codification;
     }
 
-    public LocalDate endDate() {
+    public LocalDate validityDate() {
         return this.startDate.plusYears(this.validityYears);
     }
 }

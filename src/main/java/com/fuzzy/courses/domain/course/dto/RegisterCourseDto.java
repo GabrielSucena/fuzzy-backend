@@ -1,10 +1,7 @@
 package com.fuzzy.courses.domain.course.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fuzzy.courses.domain.codification.Codification;
 import com.fuzzy.courses.domain.course.Course;
-import com.fuzzy.courses.domain.modality.Modality;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -24,7 +21,7 @@ public record RegisterCourseDto(
         String workload,
 
         @NotBlank
-        String procedure,
+        String codification,
 
         String description,
 
@@ -33,27 +30,19 @@ public record RegisterCourseDto(
         LocalDate startDate,
 
         @NotNull
-        Integer validityYears,
-
-        @NotNull
-        Long modalityId,
-
-        @NotNull
-        Long codingsId
+        Integer validityYears
 ) {
 
-    public Course toCourse(Modality modality, Codification codification) {
+    public Course toCourse() {
         return new Course(
                 instructor,
                 version,
                 title,
                 workload,
-                procedure,
+                codification,
                 description,
                 startDate,
-                validityYears,
-                modality,
-                codification
+                validityYears
         );
     }
 

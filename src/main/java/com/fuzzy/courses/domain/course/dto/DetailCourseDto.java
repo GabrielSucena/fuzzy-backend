@@ -2,28 +2,26 @@ package com.fuzzy.courses.domain.course.dto;
 
 import com.fuzzy.courses.domain.collaborator.dto.DescribeCollaboratorDto;
 import com.fuzzy.courses.domain.course.Course;
-import com.fuzzy.courses.domain.courseCollaborator.CourseCollaborator;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 public record DetailCourseDto(
         Long id,
         String title,
-        String procedure,
+        String codification,
+        String version,
         String instructor,
+        LocalDate validityDate,
         String workload,
         LocalDate startDate,
-        String version,
-        String modality,
-        Integer validityYears,
-        String codification,
-        Set<CourseCollaborator> listCollaborators
+        DescribeCourseDto describeCourse,
+        List<ListCollaboratorsInCourseDto> collaborators
 
 ) {
 
-    public DetailCourseDto (Course course) {
-        this(course.getId(), course.getTitle(), course.getProcedure(), course.getInstructor(), course.getWorkload(), course.getStartDate(), course.getVersion(), course.getModality().getModality(), course.getValidityYears(), course.getCodification().getCodification(), course.getCourseCollaborators());
+    public DetailCourseDto (Course course, List<ListCollaboratorsInCourseDto> collaborators, DescribeCourseDto describeCourse) {
+        this(course.getId(), course.getTitle(), course.getCodification(), course.getVersion(), course.getInstructor(), course.validityDate() ,course.getWorkload(), course.getStartDate(), describeCourse,collaborators);
     }
 
 }

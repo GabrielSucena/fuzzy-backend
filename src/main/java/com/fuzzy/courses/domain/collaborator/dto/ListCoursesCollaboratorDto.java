@@ -9,5 +9,5 @@ public interface ListCoursesCollaboratorDto {
     String getCourse_title();
     String getCourse_version();
     LocalDate getStart_date();
-    String getCourse_procedure();
+    String getCodification();
 }

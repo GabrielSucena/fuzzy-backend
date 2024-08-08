@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface CollaboratorRepository extends JpaRepository<Collaborator, Long> {
@@ -15,7 +16,7 @@ public interface CollaboratorRepository extends JpaRepository<Collaborator, Long
     @Query(
             value = """
                     SELECT
-                                                 
+                                               
                         -- Contagem de cursos completados
                         (SELECT COUNT(*)
                         FROM courses c
@@ -55,18 +56,16 @@ public interface CollaboratorRepository extends JpaRepository<Collaborator, Long
                         (SELECT COUNT(*)
                         FROM courses c
                         LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
-                        JOIN codings co ON c.codification_id = co.id
                         WHERE ce.collaborator_id = :id
-                        AND co.codification LIKE '%SOP%'
+                        AND c.codification LIKE '%SOP%'
                         ) AS sop,
                                                  
                         -- Contagem de cursos por tipo (Y) para o empregado
                         (SELECT COUNT(*)
                         FROM courses c
                         LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
-                        JOIN codings co ON c.codification_id = co.id
                         WHERE ce.collaborator_id = :id
-                        AND co.codification LIKE '%GOP%'
+                        AND c.codification LIKE '%GOP%'
                         ) AS gop                      
                         FROM
                         collaborators e
@@ -79,4 +78,6 @@ public interface CollaboratorRepository extends JpaRepository<Collaborator, Long
                     """,
             nativeQuery=true)
     DescribeCollaboratorDto describeCollaborator(Long id, LocalDate today);
+
+    List<Collaborator> findByDepartment_id(Long departmentId);
 }

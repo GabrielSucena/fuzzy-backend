@@ -16,6 +16,9 @@ public record UpdateCourseDto(
         @NotBlank
         String workload,
 
+        @NotBlank
+        String codification,
+
         String description,
 
         @JsonFormat(pattern = "dd/MM/yyyy")
@@ -23,9 +26,6 @@ public record UpdateCourseDto(
         LocalDate startDate,
 
         @NotNull
-        Integer validityYears,
-
-        @NotNull
-        Long codingsId
+        Integer validityYears
 ) {
 }

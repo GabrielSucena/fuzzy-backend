@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cursos")
+@CrossOrigin("*")
 public class CourseController {
 
     @Autowired

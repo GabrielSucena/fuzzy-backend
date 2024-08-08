@@ -1,9 +1,9 @@
 package com.fuzzy.courses.domain.course.dto.courseCollaborator;
 
-import jakarta.validation.constraints.NotNull;
+import java.util.Set;
 
 public record AddCollaboratorDto(
-        @NotNull
-        Long collaboratorId
+        Set<Long> collaboratorsId,
+        Set<Long> departmentsId
 ) {
 }

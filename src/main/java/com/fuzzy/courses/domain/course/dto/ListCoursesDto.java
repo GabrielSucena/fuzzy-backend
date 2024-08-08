@@ -7,16 +7,16 @@ import java.time.LocalDate;
 public record ListCoursesDto(
         Long id,
         String title,
-        String procedure,
+        String codification,
         String instructor,
         String workload,
         LocalDate startDate,
-        LocalDate endDate,
+        LocalDate validityDate,
         String version
 ) {
 
     public ListCoursesDto (Course course) {
-        this(course.getId(), course.getTitle(), course.getProcedure(), course.getInstructor(), course.getWorkload(), course.getStartDate(), course.endDate() ,course.getVersion());
+        this(course.getId(), course.getTitle(), course.getCodification(), course.getInstructor(), course.getWorkload(), course.getStartDate(), course.validityDate() ,course.getVersion());
     }
 
 }

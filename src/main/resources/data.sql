@@ -56,11 +56,3 @@ INSERT IGNORE INTO classifications (id, classification) VALUES (1, 'N/A');
 INSERT IGNORE INTO classifications (id, classification) VALUES (2, 'ME');
 INSERT IGNORE INTO classifications (id, classification) VALUES (3, 'MA');
 INSERT IGNORE INTO classifications (id, classification) VALUES (4, 'C');
-
-
-INSERT IGNORE INTO codings (id, codification) VALUES (1, 'MED-CA-SOP-00111213');
-INSERT IGNORE INTO codings (id, codification) VALUES (2, 'MED-CA-GOP-55555555');
-
-
-INSERT IGNORE INTO modalities (id, modality) VALUES (1, 'Presencial');
-INSERT IGNORE INTO modalities (id, modality) VALUES (2, 'Online');

@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/colaboradores")
+@CrossOrigin("*")
 public class CollaboratorController {
 
     @Autowired

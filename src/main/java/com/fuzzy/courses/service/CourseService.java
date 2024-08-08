@@ -1,5 +1,6 @@
 package com.fuzzy.courses.service;
 
+import com.fuzzy.courses.domain.collaborator.Collaborator;
 import com.fuzzy.courses.domain.course.Course;
 import com.fuzzy.courses.domain.course.dto.DetailCourseDto;
 import com.fuzzy.courses.domain.course.dto.ListCoursesDto;
@@ -10,7 +11,6 @@ import com.fuzzy.courses.domain.course.dto.courseCollaborator.RemoveCollaborator
 import com.fuzzy.courses.domain.course.dto.courseCollaborator.UpdateClassificationAndStatusDto;
 import com.fuzzy.courses.domain.courseCollaborator.CourseCollaborator;
 import com.fuzzy.courses.domain.courseCollaborator.pk.CourseCollaboratorPK;
-import com.fuzzy.courses.domain.status.Status;
 import com.fuzzy.courses.exception.FuzzyNotFoundException;
 import com.fuzzy.courses.exception.IdDoesNotExistsException;
 import com.fuzzy.courses.repository.*;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,12 +26,6 @@ public class CourseService {
 
     @Autowired
     private CourseRepository courseRepository;
-
-    @Autowired
-    private ModalityRepository modalityRepository;
-
-    @Autowired
-    private CodificationRepository codificationRepository;
 
     @Autowired
     private CollaboratorRepository collaboratorRepository;
@@ -48,17 +41,7 @@ public class CourseService {
 
     public Course registerCourse(RegisterCourseDto dto) {
 
-        if(!modalityRepository.existsById(dto.modalityId())){
-            throw new IdDoesNotExistsException("The modality ID provided does not exist!");
-        }
-        if(!codificationRepository.existsById(dto.codingsId())){
-            throw new IdDoesNotExistsException("The codification ID provided does not exist!");
-        }
-
-        var modality = modalityRepository.getReferenceById(dto.modalityId());
-        var codification = codificationRepository.getReferenceById(dto.codingsId());
-
-        return courseRepository.save(dto.toCourse(modality, codification));
+        return courseRepository.save(dto.toCourse());
 
     }
 
@@ -75,27 +58,26 @@ public class CourseService {
 
         var course = courseRepository.findById(id);
 
-        return new DetailCourseDto(course.get());
+        var collaborators = courseCollaboratorRepository.listCollaborators(id);
+
+        LocalDate today = LocalDate.now();
+        var description = courseRepository.describeCourse(id, today);
+
+        return new DetailCourseDto(course.get(), collaborators, description);
 
     }
 
     public void updateCourse(Long id, UpdateCourseDto dto) {
-
-        if(!codificationRepository.existsById(dto.codingsId())){
-            throw new IdDoesNotExistsException("The codification ID provided does not exist!");
-        }
-
-        var codification = codificationRepository.getReferenceById(dto.codingsId());
 
         courseRepository.findById(id)
                 .map(course -> {
                     course.setInstructor(dto.instructor());
                     course.setTitle(dto.title());
                     course.setWorkload(dto.workload());
+                    course.setCodification(dto.codification());
                     course.setDescription(dto.description());
                     course.setStartDate(dto.startDate());
                     course.setValidityYears(dto.validityYears());
-                    course.setCodification(codification);
                     return courseRepository.save(course);
                 })
                 .orElseThrow(() -> new FuzzyNotFoundException("Course with id " + id + " not found"));
@@ -116,36 +98,79 @@ public class CourseService {
 
     public void addCollaborator(Long id, AddCollaboratorDto dto) {
 
-        var collaboratorIsPresent = collaboratorRepository.findById(dto.collaboratorId());
+        if (dto.collaboratorsId() != null){
+            for(Long collaboratorId : dto.collaboratorsId()){
+                var collaboratorIsPresent = collaboratorRepository.findById(collaboratorId);
 
-        if (collaboratorIsPresent.isEmpty()){
-            throw new FuzzyNotFoundException("Collaborator with id " + dto.collaboratorId() + " not found");
+                if (collaboratorIsPresent.isEmpty()){
+                    throw new FuzzyNotFoundException("Collaborator with id " + collaboratorId + " not found");
+                }
+
+                var course = courseRepository.getReferenceById(id);
+                var collaborator = collaboratorRepository.getReferenceById(collaboratorId);
+                var statusRealizar = statusRepository.getReferenceById(2L);
+                var classificationNA = classificationRepository.getReferenceById(1L);
+
+                var courseCollaborator = new CourseCollaborator(course, collaborator, classificationNA, statusRealizar);
+
+                courseCollaboratorRepository.save(courseCollaborator);
+            }
         }
 
-        var course = courseRepository.getReferenceById(id);
-        var collaborator = collaboratorRepository.getReferenceById(dto.collaboratorId());
-        var statusRealizar = statusRepository.getReferenceById(2L);
-        var classificationNA = classificationRepository.getReferenceById(1L);
+        if (dto.departmentsId() != null){
+            for(Long departmentId : dto.departmentsId()){
 
-        var courseCollaborator = new CourseCollaborator(course, collaborator, classificationNA, statusRealizar);
+                var collaborators = collaboratorRepository.findByDepartment_id(departmentId);
 
-        courseCollaboratorRepository.save(courseCollaborator);
+                for(Collaborator collaborator : collaborators){
+
+                    var course = courseRepository.getReferenceById(id);
+                    var statusRealizar = statusRepository.getReferenceById(2L);
+                    var classificationNA = classificationRepository.getReferenceById(1L);
+
+                    var courseCollaborator = new CourseCollaborator(course, collaborator, classificationNA, statusRealizar);
+
+                    courseCollaboratorRepository.save(courseCollaborator);
+                }
+
+            }
+        }
+
 
     }
 
     public void removeCourseCollaborator(Long id, RemoveCollaboratorDto dto) {
-        var collaboratorIsPresent = collaboratorRepository.findById(dto.collaboratorId());
 
-        if (collaboratorIsPresent.isEmpty()){
-            throw new FuzzyNotFoundException("Collaborator with id " + dto.collaboratorId() + " not found");
+        if (dto.collaboratorsId() != null) {
+            for (Long collaboratorId : dto.collaboratorsId()) {
+                var collaboratorIsPresent = collaboratorRepository.findById(collaboratorId);
+
+                if (collaboratorIsPresent.isEmpty()){
+                    throw new FuzzyNotFoundException("Collaborator with id " + collaboratorId + " not found");
+                }
+
+                var course = courseRepository.getReferenceById(id);
+                var collaborator = collaboratorRepository.getReferenceById(collaboratorId);
+
+                var courseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator));
+
+                courseCollaboratorRepository.delete(courseCollaborator);
+            }
         }
 
-        var course = courseRepository.getReferenceById(id);
-        var collaborator = collaboratorRepository.getReferenceById(dto.collaboratorId());
+        if (dto.departmentsId() != null) {
+            for (Long departmentId : dto.departmentsId()) {
+                var collaborators = collaboratorRepository.findByDepartment_id(departmentId);
 
-        var courseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator));
+                for(Collaborator collaborator : collaborators){
+                    var course = courseRepository.getReferenceById(id);
 
-        courseCollaboratorRepository.delete(courseCollaborator);
+                    var courseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator));
+
+                    courseCollaboratorRepository.delete(courseCollaborator);
+                }
+            }
+        }
     }
 
     public void updateClassificationAndStatus(Long id, UpdateClassificationAndStatusDto dto) {
