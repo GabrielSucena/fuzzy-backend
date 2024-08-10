@@ -7,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 @RestControllerAdvice
 public class RestExceptionHandler {
 
@@ -26,6 +28,15 @@ public class RestExceptionHandler {
         var pb = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         pb.setTitle("Your request parameters didn't validate.");
         pb.setProperty("Invalid-params", fieldErrors);
+
+        return pb;
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ProblemDetail handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e){
+
+        var pb = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        pb.setTitle("The user is linked to one or more courses and cannot be deleted.");
 
         return pb;
     }
