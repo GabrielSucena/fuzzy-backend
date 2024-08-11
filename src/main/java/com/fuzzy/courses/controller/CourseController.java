@@ -77,7 +77,7 @@ public class CourseController {
 
     // Adicionar/Remover colaboradores vinculados a cursos
 
-    @PostMapping("/colaboradores/{id}")
+    @PostMapping("{id}/colaboradores")
     @Transactional
     public ResponseEntity addCollaborator(@PathVariable Long id, @RequestBody @Valid AddCollaboratorDto dto){
 
@@ -86,7 +86,7 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/colaboradores/{id}")
+    @DeleteMapping("{id}/colaboradores")
     @Transactional
     public ResponseEntity removeCourseCollaborator(@PathVariable Long id, @RequestBody @Valid RemoveCollaboratorDto dto) {
 
@@ -95,7 +95,7 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/colaboradores/{id}")
+    @PatchMapping("{id}/colaboradores")
     @Transactional
     public ResponseEntity updateClassificationAndStatus(@PathVariable Long id, @RequestBody @Valid UpdateClassificationAndStatusDto dto){
 
