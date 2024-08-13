@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -25,6 +26,7 @@ public class CollaboratorController {
 
     @PostMapping
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<RegisterCollaboratorDto> registerCollaborator(@RequestBody @Valid RegisterCollaboratorDto dto, UriComponentsBuilder uriBuilder) {
 
         var collaborator = collaboratorService.registerCollaborator(dto);
@@ -55,6 +57,7 @@ public class CollaboratorController {
 
     @PutMapping("{id}")
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<UpdateCollaboratorDto> updateCollaborator(@PathVariable Long id, @RequestBody @Valid UpdateCollaboratorDto dto) {
 
         collaboratorService.updateCollaborator(id, dto);
@@ -65,6 +68,7 @@ public class CollaboratorController {
 
     @DeleteMapping("{id}")
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<Collaborator> deleteCollaborator(@PathVariable Long id) {
 
         collaboratorService.deleteCollaborator(id);

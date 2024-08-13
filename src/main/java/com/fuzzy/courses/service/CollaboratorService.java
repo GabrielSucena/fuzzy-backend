@@ -8,11 +8,9 @@ import com.fuzzy.courses.domain.collaborator.dto.UpdateCollaboratorDto;
 import com.fuzzy.courses.exception.CollaboratorDataAlredyExistsException;
 import com.fuzzy.courses.exception.FuzzyNotFoundException;
 import com.fuzzy.courses.exception.IdDoesNotExistsException;
-import com.fuzzy.courses.repository.CollaboratorRepository;
-import com.fuzzy.courses.repository.CourseCollaboratorRepository;
-import com.fuzzy.courses.repository.DepartmentRepository;
-import com.fuzzy.courses.repository.PositionRepository;
+import com.fuzzy.courses.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,6 +33,12 @@ public class CollaboratorService {
     @Autowired
     private CourseCollaboratorRepository courseCollaboratorRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     public Collaborator registerCollaborator(RegisterCollaboratorDto dto) {
 
         var collaborator = collaboratorRepository.findByRegisterOrEmail(dto.register(), dto.email());
@@ -51,8 +55,17 @@ public class CollaboratorService {
 
         var position = positionRepository.getReferenceById(dto.positionId());
         var department = departmentRepository.getReferenceById(dto.departmentId());
+        var role = roleRepository.findByName("basic");
 
-        return collaboratorRepository.save(dto.toCollaborator(position, department));
+        var departmentAdmin = departmentRepository.findByDepartment("Qualidade P&D");
+
+        if (department == departmentAdmin){
+            role = roleRepository.findByName("admin");
+        }
+
+        var password = passwordEncoder.encode(dto.register());
+
+        return collaboratorRepository.save(dto.toCollaborator(position, department, role, password));
 
     }
 

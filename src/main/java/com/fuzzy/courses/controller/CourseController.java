@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,6 +29,7 @@ public class CourseController {
 
     @PostMapping
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<RegisterCourseDto> registerCourse(@RequestBody @Valid RegisterCourseDto dto, UriComponentsBuilder uriBuilder) {
 
         var course = courseService.registerCourse(dto);
@@ -58,6 +60,7 @@ public class CourseController {
 
     @PutMapping("{id}")
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<UpdateCourseDto> updateCourse(@PathVariable Long id, @RequestBody @Valid UpdateCourseDto dto) {
 
         courseService.updateCourse(id, dto);
@@ -68,6 +71,7 @@ public class CourseController {
 
     @DeleteMapping("{id}")
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<Course> deleteCourse(@PathVariable Long id) {
 
         courseService.deleteCourse(id);
@@ -79,6 +83,7 @@ public class CourseController {
 
     @PostMapping("{id}/colaboradores")
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity addCollaborator(@PathVariable Long id, @RequestBody @Valid AddCollaboratorDto dto){
 
         courseService.addCollaborator(id, dto);
@@ -88,6 +93,7 @@ public class CourseController {
 
     @DeleteMapping("{id}/colaboradores")
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity removeCourseCollaborator(@PathVariable Long id, @RequestBody @Valid RemoveCollaboratorDto dto) {
 
         courseService.removeCourseCollaborator(id, dto);
@@ -97,6 +103,7 @@ public class CourseController {
 
     @PatchMapping("{id}/colaboradores")
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity updateClassificationAndStatus(@PathVariable Long id, @RequestBody @Valid UpdateClassificationAndStatusDto dto){
 
         courseService.updateClassificationAndStatus(id, dto);

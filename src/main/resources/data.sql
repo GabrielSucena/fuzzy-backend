@@ -56,3 +56,6 @@ INSERT IGNORE INTO classifications (id, classification) VALUES (1, 'N/A');
 INSERT IGNORE INTO classifications (id, classification) VALUES (2, 'ME');
 INSERT IGNORE INTO classifications (id, classification) VALUES (3, 'MA');
 INSERT IGNORE INTO classifications (id, classification) VALUES (4, 'C');
+
+INSERT IGNORE INTO roles (id, name) VALUES (1, 'admin');
+INSERT IGNORE INTO roles (id, name) VALUES (2, 'basic');

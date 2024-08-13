@@ -80,4 +80,8 @@ public interface CollaboratorRepository extends JpaRepository<Collaborator, Long
     DescribeCollaboratorDto describeCollaborator(Long id, LocalDate today);
 
     List<Collaborator> findByDepartment_id(Long departmentId);
+
+    Optional<Collaborator> findByRegister(String register);
+
+    Optional<Collaborator> findByName(String name);
 }
