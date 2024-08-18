@@ -1,5 +1,6 @@
 package com.fuzzy.courses.controller;
 
+import com.fuzzy.courses.domain.audit.AuditDto.AuditDeleteDto;
 import com.fuzzy.courses.domain.course.Course;
 import com.fuzzy.courses.domain.course.dto.DetailCourseDto;
 import com.fuzzy.courses.domain.course.dto.ListCoursesDto;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -61,9 +63,9 @@ public class CourseController {
     @PutMapping("{id}")
     @Transactional
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity<UpdateCourseDto> updateCourse(@PathVariable Long id, @RequestBody @Valid UpdateCourseDto dto) {
+    public ResponseEntity<UpdateCourseDto> updateCourse(@PathVariable Long id, @RequestBody @Valid UpdateCourseDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
 
-        courseService.updateCourse(id, dto);
+        courseService.updateCourse(id, dto, jwtAuthenticationToken);
 
         return ResponseEntity.noContent().build();
 
@@ -72,9 +74,9 @@ public class CourseController {
     @DeleteMapping("{id}")
     @Transactional
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity<Course> deleteCourse(@PathVariable Long id) {
+    public ResponseEntity<Course> deleteCourse(@PathVariable Long id, AuditDeleteDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
 
-        courseService.deleteCourse(id);
+        courseService.deleteCourse(id, dto, jwtAuthenticationToken);
 
         return ResponseEntity.noContent().build();
     }
@@ -84,9 +86,9 @@ public class CourseController {
     @PostMapping("{id}/colaboradores")
     @Transactional
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity addCollaborator(@PathVariable Long id, @RequestBody @Valid AddCollaboratorDto dto){
+    public ResponseEntity addCollaborator(@PathVariable Long id, @RequestBody @Valid AddCollaboratorDto dto, JwtAuthenticationToken jwtAuthenticationToken){
 
-        courseService.addCollaborator(id, dto);
+        courseService.addCollaborator(id, dto, jwtAuthenticationToken);
 
         return ResponseEntity.noContent().build();
     }
@@ -94,9 +96,9 @@ public class CourseController {
     @DeleteMapping("{id}/colaboradores")
     @Transactional
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity removeCourseCollaborator(@PathVariable Long id, @RequestBody @Valid RemoveCollaboratorDto dto) {
+    public ResponseEntity removeCourseCollaborator(@PathVariable Long id, @RequestBody @Valid RemoveCollaboratorDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
 
-        courseService.removeCourseCollaborator(id, dto);
+        courseService.removeCourseCollaborator(id, dto, jwtAuthenticationToken);
 
         return ResponseEntity.noContent().build();
     }
@@ -104,9 +106,9 @@ public class CourseController {
     @PatchMapping("{id}/colaboradores")
     @Transactional
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity updateClassificationAndStatus(@PathVariable Long id, @RequestBody @Valid UpdateClassificationAndStatusDto dto){
+    public ResponseEntity updateClassificationAndStatus(@PathVariable Long id, @RequestBody @Valid UpdateClassificationAndStatusDto dto, JwtAuthenticationToken jwtAuthenticationToken){
 
-        courseService.updateClassificationAndStatus(id, dto);
+        courseService.updateClassificationAndStatus(id, dto, jwtAuthenticationToken);
 
         return ResponseEntity.noContent().build();
     }

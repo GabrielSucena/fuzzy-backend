@@ -1,16 +1,15 @@
 package com.fuzzy.courses.controller;
 
+import com.fuzzy.courses.domain.audit.AuditDto.AuditDeleteDto;
 import com.fuzzy.courses.domain.collaborator.Collaborator;
-import com.fuzzy.courses.domain.collaborator.dto.DetailCollaboratorDto;
-import com.fuzzy.courses.domain.collaborator.dto.ListCollaboratorsDto;
-import com.fuzzy.courses.domain.collaborator.dto.RegisterCollaboratorDto;
-import com.fuzzy.courses.domain.collaborator.dto.UpdateCollaboratorDto;
+import com.fuzzy.courses.domain.collaborator.dto.*;
 import com.fuzzy.courses.service.CollaboratorService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -58,9 +57,9 @@ public class CollaboratorController {
     @PutMapping("{id}")
     @Transactional
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity<UpdateCollaboratorDto> updateCollaborator(@PathVariable Long id, @RequestBody @Valid UpdateCollaboratorDto dto) {
+    public ResponseEntity<UpdateCollaboratorDto> updateCollaborator(@PathVariable Long id, @RequestBody @Valid UpdateCollaboratorDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
 
-        collaboratorService.updateCollaborator(id, dto);
+        collaboratorService.updateCollaborator(id, dto, jwtAuthenticationToken);
 
         return ResponseEntity.noContent().build();
 
@@ -69,9 +68,9 @@ public class CollaboratorController {
     @DeleteMapping("{id}")
     @Transactional
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity<Collaborator> deleteCollaborator(@PathVariable Long id) {
+    public ResponseEntity<Collaborator> deleteCollaborator(@PathVariable Long id, JwtAuthenticationToken jwtAuthenticationToken, @RequestBody @Valid AuditDeleteDto dto) {
 
-        collaboratorService.deleteCollaborator(id);
+        collaboratorService.deleteCollaborator(id, dto, jwtAuthenticationToken);
 
         return ResponseEntity.noContent().build();
     }

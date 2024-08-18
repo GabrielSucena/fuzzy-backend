@@ -49,7 +49,7 @@ public class AdminUserConfig implements CommandLineRunner {
                     collaborator.setRegister("admin");
                     collaborator.setPosition(position);
                     collaborator.setDepartment(department);
-                    collaborator.setPassword(bCryptPasswordEncoder.encode("123"));
+                    collaborator.setPassword(bCryptPasswordEncoder.encode("admin"));
                     collaborator.setRoles(Set.of(roleAdmin));
                     collaboratorRepository.save(collaborator);
                 }
