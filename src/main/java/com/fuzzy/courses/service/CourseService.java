@@ -9,6 +9,7 @@ import com.fuzzy.courses.domain.course.dto.ListCoursesDto;
 import com.fuzzy.courses.domain.course.dto.RegisterCourseDto;
 import com.fuzzy.courses.domain.course.dto.UpdateCourseDto;
 import com.fuzzy.courses.domain.course.dto.courseCollaborator.AddCollaboratorDto;
+import com.fuzzy.courses.domain.course.dto.courseCollaborator.ListUpdateClassificationAndStatusDto;
 import com.fuzzy.courses.domain.course.dto.courseCollaborator.RemoveCollaboratorDto;
 import com.fuzzy.courses.domain.course.dto.courseCollaborator.UpdateClassificationAndStatusDto;
 import com.fuzzy.courses.domain.courseCollaborator.CourseCollaborator;
@@ -205,39 +206,41 @@ public class CourseService {
         }
     }
 
-    public void updateClassificationAndStatus(Long id, UpdateClassificationAndStatusDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
+    public void updateClassificationAndStatus(Long id, ListUpdateClassificationAndStatusDto dtoList, JwtAuthenticationToken jwtAuthenticationToken) {
 
         var user = getCollaborator(jwtAuthenticationToken);
 
-        auditUpdateCollaboratorCourse(user, id, dto);
+        for(UpdateClassificationAndStatusDto dto : dtoList.updateClassificationAndStatusDtoList()){
+            auditUpdateCollaboratorCourse(user, id, dto);
 
-        var collaboratorIsPresent = collaboratorRepository.findById(dto.collaboratorId());
+            var collaboratorIsPresent = collaboratorRepository.findById(dto.collaboratorId());
 
-        if (collaboratorIsPresent.isEmpty()){
-            throw new FuzzyNotFoundException("Collaborator with id " + dto.collaboratorId() + " not found");
-        }
-
-        var course = courseRepository.getReferenceById(id);
-        var collaborator = collaboratorRepository.getReferenceById(dto.collaboratorId());
-
-        var courseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator));
-
-        if (dto.classificationId() != null) {
-            var classification = classificationRepository.getReferenceById(dto.classificationId());
-            courseCollaborator.setClassification(classification);
-        }
-        if (dto.statusId() != null) {
-            var status = statusRepository.getReferenceById(dto.statusId());
-            courseCollaborator.setStatus(status);
-            if (status.getId() == 1){
-                courseCollaborator.setCompletedDate(LocalDate.now());
-            } else {
-                courseCollaborator.setCompletedDate(null);
+            if (collaboratorIsPresent.isEmpty()){
+                throw new FuzzyNotFoundException("Collaborator with id " + dto.collaboratorId() + " not found");
             }
+
+            var course = courseRepository.getReferenceById(id);
+            var collaborator = collaboratorRepository.getReferenceById(dto.collaboratorId());
+
+            var courseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator));
+
+            if (dto.classificationId() != null) {
+                var classification = classificationRepository.getReferenceById(dto.classificationId());
+                courseCollaborator.setClassification(classification);
+            }
+            if (dto.statusId() != null) {
+                var status = statusRepository.getReferenceById(dto.statusId());
+                courseCollaborator.setStatus(status);
+                if (status.getId() == 1){
+                    courseCollaborator.setCompletedDate(LocalDate.now());
+                } else {
+                    courseCollaborator.setCompletedDate(null);
+                }
+            }
+
+
+            courseCollaboratorRepository.save(courseCollaborator);
         }
-
-
-        courseCollaboratorRepository.save(courseCollaborator);
 
     }
 

@@ -7,6 +7,7 @@ import com.fuzzy.courses.domain.course.dto.ListCoursesDto;
 import com.fuzzy.courses.domain.course.dto.RegisterCourseDto;
 import com.fuzzy.courses.domain.course.dto.UpdateCourseDto;
 import com.fuzzy.courses.domain.course.dto.courseCollaborator.AddCollaboratorDto;
+import com.fuzzy.courses.domain.course.dto.courseCollaborator.ListUpdateClassificationAndStatusDto;
 import com.fuzzy.courses.domain.course.dto.courseCollaborator.RemoveCollaboratorDto;
 import com.fuzzy.courses.domain.course.dto.courseCollaborator.UpdateClassificationAndStatusDto;
 import com.fuzzy.courses.service.CourseService;
@@ -106,9 +107,9 @@ public class CourseController {
     @PatchMapping("{id}/colaboradores")
     @Transactional
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity updateClassificationAndStatus(@PathVariable Long id, @RequestBody @Valid UpdateClassificationAndStatusDto dto, JwtAuthenticationToken jwtAuthenticationToken){
+    public ResponseEntity updateClassificationAndStatus(@PathVariable Long id, @RequestBody @Valid ListUpdateClassificationAndStatusDto dtoList, JwtAuthenticationToken jwtAuthenticationToken){
 
-        courseService.updateClassificationAndStatus(id, dto, jwtAuthenticationToken);
+        courseService.updateClassificationAndStatus(id, dtoList, jwtAuthenticationToken);
 
         return ResponseEntity.noContent().build();
     }
