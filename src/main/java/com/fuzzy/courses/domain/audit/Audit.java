@@ -1,7 +1,4 @@
 package com.fuzzy.courses.domain.audit;
-
-import com.fuzzy.courses.domain.collaborator.Collaborator;
-import com.fuzzy.courses.domain.course.Course;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +7,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Table(name = "audits")
@@ -24,17 +20,17 @@ public class Audit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user")
+    @Column(name = "user_modify")
     private String user;
 
     @Column(name = "created_on")
     @CreationTimestamp
     private Instant createdOn;
 
-    @Column(name = "course_id")
+    @Column(name = "course_modify")
     private Long course;
 
-    @Column(name = "collaborator_id")
+    @Column(name = "collaborator_modify")
     private Long collaborator;
 
     @Column(name = "changed_field")
@@ -49,7 +45,7 @@ public class Audit {
     @Column(name = "course_version")
     private String courseVersion;
 
-    @Column(name = "reason")
+    @Column(name = "reason_removed")
     private String reason;
 
     public Audit(String user, Long course, Long collaborator, String changedField, String oldValues, Boolean removed, String courseVersion, String reason) {

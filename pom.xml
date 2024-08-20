@@ -59,7 +59,7 @@
 			<scope>test</scope>
 		</dependency>
 
-
+		<!-- Security -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -75,6 +75,24 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Security -->
+		<!-- Oracle -->
+
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc11-production</artifactId>
+			<version>21.3.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.oracle.database.ha</groupId>
+					<artifactId>simplefan</artifactId>
+				</exclusion>
+			</exclusions>
+			<type>pom</type>
+		</dependency>
+
+		<!-- Oracle -->
 	</dependencies>
 
 	<build>

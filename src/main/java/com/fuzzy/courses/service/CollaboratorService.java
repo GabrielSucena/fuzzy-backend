@@ -92,6 +92,7 @@ public class CollaboratorService {
         var courses = courseCollaboratorRepository.listCourses(id);
 
         LocalDate today = LocalDate.now();
+
         var description = collaboratorRepository.describeCollaborator(id, today);
 
         return new DetailCollaboratorDto(collaborator.get(), courses, description);

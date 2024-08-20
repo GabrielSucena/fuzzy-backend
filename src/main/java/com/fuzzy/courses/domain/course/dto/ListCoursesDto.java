@@ -11,12 +11,12 @@ public record ListCoursesDto(
         String instructor,
         String workload,
         LocalDate startDate,
-        LocalDate validityDate,
+        LocalDate endDate,
         String version
 ) {
 
     public ListCoursesDto (Course course) {
-        this(course.getId(), course.getTitle(), course.getCodification(), course.getInstructor(), course.getWorkload(), course.getStartDate(), course.validityDate() ,course.getVersion());
+        this(course.getId(), course.getTitle(), course.getCodification(), course.getInstructor(), course.getWorkload(), course.getStartDate(), course.getStartDate().plusDays(30) ,course.getVersion());
     }
 
 }

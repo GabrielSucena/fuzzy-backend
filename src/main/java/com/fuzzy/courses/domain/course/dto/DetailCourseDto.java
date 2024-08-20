@@ -9,6 +9,7 @@ import java.util.List;
 public record DetailCourseDto(
         Long id,
         String title,
+        String description,
         String codification,
         String version,
         String instructor,
@@ -21,7 +22,7 @@ public record DetailCourseDto(
 ) {
 
     public DetailCourseDto (Course course, List<ListCollaboratorsInCourseDto> collaborators, DescribeCourseDto describeCourse) {
-        this(course.getId(), course.getTitle(), course.getCodification(), course.getVersion(), course.getInstructor(), course.validityDate() ,course.getWorkload(), course.getStartDate(), describeCourse,collaborators);
+        this(course.getId(), course.getTitle(), course.getDescription() ,course.getCodification(), course.getVersion(), course.getInstructor(), course.validityDate() ,course.getWorkload(), course.getStartDate(), describeCourse,collaborators);
     }
 
 }

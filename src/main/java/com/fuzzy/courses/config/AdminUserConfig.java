@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Configuration
@@ -35,8 +36,8 @@ public class AdminUserConfig implements CommandLineRunner {
 
         var roleAdmin = roleRepository.findByName("admin");
         var userAdmin = collaboratorRepository.findByName("admin");
-        var position = positionRepository.getReferenceById(3L);
-        var department = departmentRepository.getReferenceById(3L);
+        var position = positionRepository.findByPosition("admin");
+        var department = departmentRepository.findByDepartment("admin");
 
 
         userAdmin.ifPresentOrElse(

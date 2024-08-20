@@ -16,65 +16,65 @@ public interface CollaboratorRepository extends JpaRepository<Collaborator, Long
     @Query(
             value = """
                     SELECT
-                                               
-                        -- Contagem de cursos completados
-                        (SELECT COUNT(*)
-                        FROM courses c
-                        LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
-                        WHERE ce.collaborator_id = :id
-                        AND ce.completed_date IS NOT NULL
-                        ) AS green,
-                                                 
-                        -- Contagem para a primeira quinzena
-                        (SELECT COUNT(*)
-                        FROM courses c
-                        LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
-                        WHERE ce.collaborator_id = :id
-                        AND ce.completed_date IS NULL
-                        AND :today BETWEEN DATE_ADD(c.start_date, INTERVAL 0 DAY) AND DATE_ADD(c.start_date, INTERVAL 15 DAY)
-                        ) AS yellow,
-                                                 
-                        -- Contagem para a segunda quinzena
-                        (SELECT COUNT(*)
-                        FROM courses c
-                        LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
-                        WHERE ce.collaborator_id = :id
-                        AND ce.completed_date IS NULL
-                        AND :today BETWEEN DATE_ADD(c.start_date, INTERVAL 15 DAY) AND DATE_ADD(c.start_date, INTERVAL 30 DAY)
-                        ) AS orange,
-                                                 
-                        -- Contagem para cursos expirados
-                        (SELECT COUNT(*)
-                        FROM courses c
-                        LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
-                        WHERE ce.collaborator_id = :id
-                        AND ce.completed_date IS NULL
-                        AND :today > DATE_ADD(c.start_date, INTERVAL 30 DAY)
-                        ) AS red,
-                        
-                        -- Contagem de cursos por tipo (X) para o empregado
-                        (SELECT COUNT(*)
-                        FROM courses c
-                        LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
-                        WHERE ce.collaborator_id = :id
-                        AND c.codification LIKE '%SOP%'
-                        ) AS sop,
-                                                 
-                        -- Contagem de cursos por tipo (Y) para o empregado
-                        (SELECT COUNT(*)
-                        FROM courses c
-                        LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
-                        WHERE ce.collaborator_id = :id
-                        AND c.codification LIKE '%GOP%'
-                        ) AS gop                      
-                        FROM
-                        collaborators e
-                        LEFT JOIN
-                        positions j ON e.position_id = j.id
-                        LEFT JOIN
-                        departments d ON e.department_id = d.id
-                        WHERE
-                        e.id = :id;
+                                                                                 
+                                                           -- Contagem de cursos completados
+                                                           (SELECT COUNT(*)
+                                                           FROM courses c
+                                                           LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
+                                                           WHERE ce.collaborator_id = :id
+                                                           AND ce.completed_date IS NOT NULL
+                                                           ) AS green,
+                                                                                  
+                                                           -- Contagem para a primeira quinzena
+                                                           (SELECT COUNT(*)
+                                                           FROM courses c
+                                                           LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
+                                                           WHERE ce.collaborator_id = :id
+                                                           AND ce.completed_date IS NULL
+                                                           AND :today BETWEEN (c.start_date + INTERVAL '0' DAY) AND (c.start_date + INTERVAL '15' DAY)
+                                                           ) AS yellow,
+                                                                                   
+                                                           -- Contagem para a segunda quinzena
+                                                           (SELECT COUNT(*)
+                                                           FROM courses c
+                                                           LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
+                                                           WHERE ce.collaborator_id = :id
+                                                           AND ce.completed_date IS NULL
+                                                           AND :today BETWEEN (c.start_date + INTERVAL '15' DAY) AND (c.start_date + INTERVAL '30' DAY)
+                                                           ) AS orange,
+                                                                                  
+                                                           -- Contagem para cursos expirados
+                                                           (SELECT COUNT(*)
+                                                           FROM courses c
+                                                           LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
+                                                           WHERE ce.collaborator_id = :id
+                                                           AND ce.completed_date IS NULL
+                                                           AND :today > (c.start_date + INTERVAL '30' DAY)
+                                                           ) AS red,
+                                                           
+                                                           -- Contagem de cursos por tipo (X) para o empregado
+                                                           (SELECT COUNT(*)
+                                                           FROM courses c
+                                                           LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
+                                                           WHERE ce.collaborator_id = :id
+                                                           AND c.codification LIKE '%SOP%'
+                                                           ) AS sop,
+                                                                                   
+                                                           -- Contagem de cursos por tipo (Y) para o empregado
+                                                           (SELECT COUNT(*)
+                                                           FROM courses c
+                                                           LEFT JOIN courses_collaborators ce ON c.id = ce.course_id
+                                                           WHERE ce.collaborator_id = :id
+                                                           AND c.codification LIKE '%GOP%'
+                                                           ) AS gop                     
+                                                           FROM
+                                                           collaborators e
+                                                           LEFT JOIN
+                                                           positions j ON e.position_id = j.id
+                                                           LEFT JOIN
+                                                           departments d ON e.department_id = d.id
+                                                           WHERE
+                                                           e.id = :id
                     """,
             nativeQuery=true)
     DescribeCollaboratorDto describeCollaborator(Long id, LocalDate today);
