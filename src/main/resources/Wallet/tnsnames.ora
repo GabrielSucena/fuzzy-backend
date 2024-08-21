@@ -1,0 +1,12 @@
+autonomousdb1_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-saopaulo-1.oraclecloud.com))(connect_data=(service_name=gc6244c51cfd0d5_autonomousdb1_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+autonomousdb1_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-saopaulo-1.oraclecloud.com))(connect_data=(service_name=gc6244c51cfd0d5_autonomousdb1_low.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+autonomousdb1_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-saopaulo-1.oraclecloud.com))(connect_data=(service_name=gc6244c51cfd0d5_autonomousdb1_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+autonomousdb1_tp = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-saopaulo-1.oraclecloud.com))(connect_data=(service_name=gc6244c51cfd0d5_autonomousdb1_tp.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+autonomousdb1_tpurgent = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-saopaulo-1.oraclecloud.com))(connect_data=(service_name=gc6244c51cfd0d5_autonomousdb1_tpurgent.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+
+

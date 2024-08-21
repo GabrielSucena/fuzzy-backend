@@ -19,7 +19,7 @@ import java.time.Instant;
 import java.util.stream.Collectors;
 
 @RestController
-public class TokenController {
+public class LoginController {
 
     @Autowired
     private JwtEncoder jwtEncoder;
