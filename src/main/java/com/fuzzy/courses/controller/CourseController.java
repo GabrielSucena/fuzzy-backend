@@ -6,10 +6,7 @@ import com.fuzzy.courses.domain.course.dto.DetailCourseDto;
 import com.fuzzy.courses.domain.course.dto.ListCoursesDto;
 import com.fuzzy.courses.domain.course.dto.RegisterCourseDto;
 import com.fuzzy.courses.domain.course.dto.UpdateCourseDto;
-import com.fuzzy.courses.domain.course.dto.courseCollaborator.AddCollaboratorDto;
-import com.fuzzy.courses.domain.course.dto.courseCollaborator.ListUpdateClassificationAndStatusDto;
-import com.fuzzy.courses.domain.course.dto.courseCollaborator.RemoveCollaboratorDto;
-import com.fuzzy.courses.domain.course.dto.courseCollaborator.UpdateClassificationAndStatusDto;
+import com.fuzzy.courses.domain.course.dto.courseCollaborator.*;
 import com.fuzzy.courses.service.CourseService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -82,7 +79,7 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
-    // Adicionar/Remover colaboradores vinculados a cursos
+    // Add/Remove collaborators linked to courses
 
     @PostMapping("{id}/colaboradores")
     @Transactional
@@ -114,5 +111,16 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
+    // Change status via pdf document
+
+    @PatchMapping("{id}/registros")
+    @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    public ResponseEntity alterStatusByRegister(@PathVariable Long id, @RequestBody @Valid AlterStatusByRegisterDto dto, JwtAuthenticationToken jwtAuthenticationToken){
+
+        courseService.alterStatusByRegister(id, dto, jwtAuthenticationToken);
+
+        return ResponseEntity.noContent().build();
+    }
 
 }

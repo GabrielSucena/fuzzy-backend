@@ -8,14 +8,10 @@ import com.fuzzy.courses.domain.course.dto.DetailCourseDto;
 import com.fuzzy.courses.domain.course.dto.ListCoursesDto;
 import com.fuzzy.courses.domain.course.dto.RegisterCourseDto;
 import com.fuzzy.courses.domain.course.dto.UpdateCourseDto;
-import com.fuzzy.courses.domain.course.dto.courseCollaborator.AddCollaboratorDto;
-import com.fuzzy.courses.domain.course.dto.courseCollaborator.ListUpdateClassificationAndStatusDto;
-import com.fuzzy.courses.domain.course.dto.courseCollaborator.RemoveCollaboratorDto;
-import com.fuzzy.courses.domain.course.dto.courseCollaborator.UpdateClassificationAndStatusDto;
+import com.fuzzy.courses.domain.course.dto.courseCollaborator.*;
 import com.fuzzy.courses.domain.courseCollaborator.CourseCollaborator;
 import com.fuzzy.courses.domain.courseCollaborator.pk.CourseCollaboratorPK;
 import com.fuzzy.courses.exception.FuzzyNotFoundException;
-import com.fuzzy.courses.exception.IdDoesNotExistsException;
 import com.fuzzy.courses.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -244,6 +240,32 @@ public class CourseService {
 
     }
 
+    public void alterStatusByRegister(Long id, AlterStatusByRegisterDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
+
+        var user = getCollaborator(jwtAuthenticationToken);
+        var course = courseRepository.getReferenceById(id);
+
+        for(String register : dto.registers()) {
+            var collaborator = collaboratorRepository.findByRegister(register);
+
+            if (collaborator.isEmpty()){
+                throw new FuzzyNotFoundException("Collaborator with register " + register + " not found");
+            }
+
+            auditalterStatusByRegister(user, id, collaborator.get());
+
+            var courseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator.get()));
+            var status = statusRepository.findByStatus("Realizado");
+
+            courseCollaborator.setStatus(status);
+            courseCollaborator.setCompletedDate(LocalDate.now());
+
+            courseCollaboratorRepository.save(courseCollaborator);
+
+        }
+
+    }
+
     private Collaborator getCollaborator(JwtAuthenticationToken jwtAuthenticationToken) {
         var user = collaboratorRepository.getReferenceById(Long.parseLong(jwtAuthenticationToken.getName()));
         return user;
@@ -350,7 +372,22 @@ public class CourseService {
         var audit = new AuditDto(user.getName(), id, dto.collaboratorId(), changedField.toString(), oldValues.toString(), false, course.getVersion(), null);
 
         auditRepository.save(audit.toAudit(audit));
-
     }
 
+    private void auditalterStatusByRegister(Collaborator user, Long id, Collaborator collaborator) {
+
+        var course = courseRepository.getReferenceById(id);
+        var oldCourseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator));
+
+        List<String> changedField = new ArrayList<>();
+        List<String> oldValues = new ArrayList<>();
+
+        changedField.add("Status");
+        oldValues.add(oldCourseCollaborator.getStatus().getStatus());
+
+        var audit = new AuditDto(user.getName(), id, collaborator.getId(), changedField.toString(), oldValues.toString(), false, course.getVersion(), null);
+
+        auditRepository.save(audit.toAudit(audit));
+
+    }
 }
