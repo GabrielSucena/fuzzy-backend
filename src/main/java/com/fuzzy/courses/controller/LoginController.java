@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import java.time.Instant;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin("*")
 public class LoginController {
 
     @Autowired
@@ -40,7 +42,7 @@ public class LoginController {
         }
 
         var now = Instant.now();
-        var expiresIn = 300L;
+        var expiresIn = 28800L;
 
         var scopes = collaborator.get().getRoles()
                 .stream()
@@ -57,7 +59,9 @@ public class LoginController {
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        return ResponseEntity.ok(new LoginResponse(jwtValue, expiresIn));
+        var roles = collaborator.get().getRoles().stream().map(Role::getName).toList();
+
+        return ResponseEntity.ok(new LoginResponse(jwtValue, expiresIn, roles.toString()));
     }
 
 }
