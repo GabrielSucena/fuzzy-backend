@@ -20,9 +20,13 @@ public class PdfExtractorController {
 
     private final PdfExtractorService pdfExtractorService;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ContentResponseDto> extractor(@Valid @NotNull @RequestParam("file") final MultipartFile pdfFile){
-        return ResponseEntity.ok().body(ContentResponseDto.builder().content(this.pdfExtractorService.extractContent(pdfFile)).build());
+    @PostMapping(value = "{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> extractor(@PathVariable Long id, @Valid @NotNull @RequestParam("file") final MultipartFile pdfFile){
+
+        pdfExtractorService.extractContent(id, pdfFile);
+
+        return ResponseEntity.noContent().build();
+
     }
 
 }
