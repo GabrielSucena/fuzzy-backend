@@ -139,6 +139,8 @@ public class CollaboratorService {
                 .orElseThrow( () -> new FuzzyNotFoundException("Collaborator with id " + id + " not found"));
     }
 
+    // Audits
+
     private Collaborator getCollaborator(JwtAuthenticationToken jwtAuthenticationToken) {
         var user = collaboratorRepository.getReferenceById(Long.parseLong(jwtAuthenticationToken.getName()));
         return user;
@@ -151,17 +153,17 @@ public class CollaboratorService {
         List<String> oldValues = new ArrayList<>();
 
         if (oldCollaborator.getPosition() != position){
-            changedField.add("Position");
+            changedField.add("Posição");
             oldValues.add(oldCollaborator.getPosition().getPosition());
         }
 
         if (oldCollaborator.getDepartment() != department){
-            changedField.add("Department");
+            changedField.add("Departamento");
             oldValues.add(oldCollaborator.getDepartment().getDepartment());
         }
 
         if (!oldCollaborator.getName().equals(dto.name())){
-            changedField.add("Name");
+            changedField.add("Nome");
             oldValues.add(oldCollaborator.getName());
         }
 

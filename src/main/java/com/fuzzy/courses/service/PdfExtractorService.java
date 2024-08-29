@@ -1,5 +1,6 @@
 package com.fuzzy.courses.service;
 
+import com.fuzzy.courses.controller.dto.ContentResponseDto;
 import com.fuzzy.courses.domain.courseCollaborator.pk.CourseCollaboratorPK;
 import com.fuzzy.courses.repository.CollaboratorRepository;
 import com.fuzzy.courses.repository.CourseCollaboratorRepository;
@@ -33,7 +34,7 @@ public class PdfExtractorService {
     @Autowired
     private StatusRepository statusRepository;
 
-    public void extractContent(Long id, MultipartFile multipartFile) {
+    public List<String> extractContent(MultipartFile multipartFile) {
 
         String text;
         List<String> registers = new ArrayList<>();
@@ -46,26 +47,33 @@ public class PdfExtractorService {
             Matcher matcher = pattern.matcher(text);
 
             while (matcher.find()) {
-                registers.add(matcher.group());
-            }
-
-            for(String register : registers){
-
-                var course = courseRepository.getReferenceById(id);
-                var collaborator = collaboratorRepository.findByRegister(register);
-                var courseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator.get()));
-                var status = statusRepository.findByStatus("Realizado");
-
-                courseCollaborator.setStatus(status);
-
-                courseCollaboratorRepository.save(courseCollaborator);
-
+                if(collaboratorRepository.findByRegister(matcher.group()).isPresent()){
+                    registers.add(matcher.group());
+                }
             }
 
         } catch (final Exception ex) {
             log.error("Error parsing PDF", ex);
         }
 
+        return registers;
+
     }
 
+    public void updateStatus(Long id, ContentResponseDto dto) {
+
+        for(String register : dto.records()){
+
+            var course = courseRepository.getReferenceById(id);
+            var collaborator = collaboratorRepository.findByRegister(register);
+            var courseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator.get()));
+            var status = statusRepository.findByStatus("Realizado");
+
+            courseCollaborator.setStatus(status);
+
+            courseCollaboratorRepository.save(courseCollaborator);
+
+        }
+
+    }
 }

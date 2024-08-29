@@ -266,6 +266,8 @@ public class CourseService {
 
     }
 
+    // Audits
+
     private Collaborator getCollaborator(JwtAuthenticationToken jwtAuthenticationToken) {
         var user = collaboratorRepository.getReferenceById(Long.parseLong(jwtAuthenticationToken.getName()));
         return user;
@@ -279,37 +281,37 @@ public class CourseService {
         List<String> oldValues = new ArrayList<>();
 
         if(!oldCourse.getInstructor().equals(dto.instructor())){
-            changedField.add("Instructor");
+            changedField.add("Instrutor");
             oldValues.add(oldCourse.getInstructor());
         }
 
         if(!oldCourse.getTitle().equals(dto.title())){
-            changedField.add("Title");
+            changedField.add("Título");
             oldValues.add(oldCourse.getTitle());
         }
 
         if(!oldCourse.getWorkload().equals(dto.workload())){
-            changedField.add("Workload");
+            changedField.add("Carga Horária");
             oldValues.add(oldCourse.getWorkload());
         }
 
         if(!oldCourse.getCodification().equals(dto.codification())){
-            changedField.add("Codification");
+            changedField.add("Codificação");
             oldValues.add(oldCourse.getCodification());
         }
 
         if(!oldCourse.getDescription().equals(dto.description())){
-            changedField.add("Description");
+            changedField.add("Descrição");
             oldValues.add(oldCourse.getDescription());
         }
 
         if(!oldCourse.getStartDate().equals(dto.startDate())){
-            changedField.add("Start Date");
+            changedField.add("Data de Início");
             oldValues.add(oldCourse.getStartDate().toString());
         }
 
         if(!Objects.equals(oldCourse.getValidityYears(), dto.validityYears())){
-            changedField.add("Validity Years");
+            changedField.add("Validade");
             oldValues.add(oldCourse.getValidityYears().toString());
         }
 
@@ -360,7 +362,7 @@ public class CourseService {
         List<String> oldValues = new ArrayList<>();
 
         if(dto.classificationId() != null && !Objects.equals(oldCourseCollaborator.getClassification().getId(), dto.classificationId())){
-            changedField.add("Classification");
+            changedField.add("Classificação");
             oldValues.add(oldCourseCollaborator.getClassification().getClassification());
         }
 

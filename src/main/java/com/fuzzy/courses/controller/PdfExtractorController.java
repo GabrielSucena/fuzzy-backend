@@ -1,7 +1,9 @@
 package com.fuzzy.courses.controller;
 
 import com.fuzzy.courses.controller.dto.ContentResponseDto;
+import com.fuzzy.courses.domain.collaborator.dto.UpdateCollaboratorDto;
 import com.fuzzy.courses.service.PdfExtractorService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +22,18 @@ public class PdfExtractorController {
 
     private final PdfExtractorService pdfExtractorService;
 
-    @PostMapping(value = "{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> extractor(@PathVariable Long id, @Valid @NotNull @RequestParam("file") final MultipartFile pdfFile){
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ContentResponseDto> extractor(@Valid @NotNull @RequestParam("file") final MultipartFile pdfFile){
 
-        pdfExtractorService.extractContent(id, pdfFile);
+        return ResponseEntity.ok().body(ContentResponseDto.builder().records(this.pdfExtractorService.extractContent(pdfFile)).build());
+
+    }
+
+    @PatchMapping("{id}")
+    @Transactional
+    public ResponseEntity<Void> updateStatus (@PathVariable Long id, @RequestBody ContentResponseDto dto){
+
+        pdfExtractorService.updateStatus(id, dto);
 
         return ResponseEntity.noContent().build();
 

@@ -61,7 +61,7 @@ public interface CourseCollaboratorRepository extends JpaRepository<CourseCollab
 
     @Query(
             value = """
-                    SELECT c.email
+                    SELECT c.id
                     FROM courses_collaborators CC
                     JOIN collaborators C
                     ON cc.collaborator_id = C.id
@@ -70,5 +70,5 @@ public interface CourseCollaboratorRepository extends JpaRepository<CourseCollab
                     """,
             nativeQuery=true
     )
-    List<String> findUsersWithPending(Long id);
+    List<Long> findUsersWithPending(Long id);
 }
