@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,18 +23,20 @@ public class PdfExtractorController {
 
     private final PdfExtractorService pdfExtractorService;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ContentResponseDto> extractor(@Valid @NotNull @RequestParam("file") final MultipartFile pdfFile){
+    @PostMapping(value = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ContentResponseDto> extractor(@PathVariable Long id, @Valid @NotNull @RequestParam("file") final MultipartFile pdfFile){
 
-        return ResponseEntity.ok().body(ContentResponseDto.builder().records(this.pdfExtractorService.extractContent(pdfFile)).build());
+        var registers = pdfExtractorService.extractContent(id, pdfFile);
+
+        return ResponseEntity.ok(new ContentResponseDto(registers));
 
     }
 
     @PatchMapping("{id}")
     @Transactional
-    public ResponseEntity<Void> updateStatus (@PathVariable Long id, @RequestBody ContentResponseDto dto){
+    public ResponseEntity<Void> updateStatus (@PathVariable Long id, @RequestBody ContentResponseDto dto, JwtAuthenticationToken jwtAuthenticationToken){
 
-        pdfExtractorService.updateStatus(id, dto);
+        pdfExtractorService.updateStatus(id, dto, jwtAuthenticationToken);
 
         return ResponseEntity.noContent().build();
 

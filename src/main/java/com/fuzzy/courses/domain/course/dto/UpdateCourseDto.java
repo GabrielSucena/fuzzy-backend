@@ -26,6 +26,9 @@ public record UpdateCourseDto(
         LocalDate startDate,
 
         @NotNull
-        Integer validityYears
+        Integer validityYears,
+
+        @NotBlank
+        String reason
 ) {
 }

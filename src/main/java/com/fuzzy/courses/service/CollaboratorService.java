@@ -167,7 +167,7 @@ public class CollaboratorService {
             oldValues.add(oldCollaborator.getName());
         }
 
-        var audit = new AuditDto(user.getName(), null, id ,changedField.toString(), oldValues.toString(), false, null, null);
+        var audit = new AuditDto(user.getName(), null, id ,changedField.toString(), oldValues.toString(), false, null, dto.reason());
 
         auditRepository.save(audit.toAudit(audit));
     }

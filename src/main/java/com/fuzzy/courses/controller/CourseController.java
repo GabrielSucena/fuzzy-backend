@@ -111,16 +111,4 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
-    // Change status via pdf document
-
-    @PatchMapping("{id}/registros")
-    @Transactional
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity alterStatusByRegister(@PathVariable Long id, @RequestBody @Valid AlterStatusByRegisterDto dto, JwtAuthenticationToken jwtAuthenticationToken){
-
-        courseService.alterStatusByRegister(id, dto, jwtAuthenticationToken);
-
-        return ResponseEntity.noContent().build();
-    }
-
 }
