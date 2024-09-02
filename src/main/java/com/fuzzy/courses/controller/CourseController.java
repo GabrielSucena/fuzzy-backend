@@ -29,7 +29,7 @@ public class CourseController {
 
     @PostMapping
     @Transactional
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity<RegisterCourseDto> registerCourse(@RequestBody @Valid RegisterCourseDto dto, UriComponentsBuilder uriBuilder) {
 
         var course = courseService.registerCourse(dto);
@@ -60,7 +60,7 @@ public class CourseController {
 
     @PutMapping("{id}")
     @Transactional
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity<UpdateCourseDto> updateCourse(@PathVariable Long id, @RequestBody @Valid UpdateCourseDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
 
         courseService.updateCourse(id, dto, jwtAuthenticationToken);
@@ -71,7 +71,7 @@ public class CourseController {
 
     @DeleteMapping("{id}")
     @Transactional
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity<Course> deleteCourse(@PathVariable Long id, AuditDeleteDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
 
         courseService.deleteCourse(id, dto, jwtAuthenticationToken);
@@ -83,7 +83,7 @@ public class CourseController {
 
     @PostMapping("{id}/colaboradores")
     @Transactional
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity addCollaborator(@PathVariable Long id, @RequestBody @Valid AddCollaboratorDto dto, JwtAuthenticationToken jwtAuthenticationToken){
 
         courseService.addCollaborator(id, dto, jwtAuthenticationToken);
@@ -93,7 +93,7 @@ public class CourseController {
 
     @DeleteMapping("{id}/colaboradores")
     @Transactional
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity removeCourseCollaborator(@PathVariable Long id, @RequestBody @Valid RemoveCollaboratorDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
 
         courseService.removeCourseCollaborator(id, dto, jwtAuthenticationToken);
@@ -103,7 +103,7 @@ public class CourseController {
 
     @PatchMapping("{id}/colaboradores")
     @Transactional
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity updateClassificationAndStatus(@PathVariable Long id, @RequestBody @Valid ListUpdateClassificationAndStatusDto dtoList, JwtAuthenticationToken jwtAuthenticationToken){
 
         courseService.updateClassificationAndStatus(id, dtoList, jwtAuthenticationToken);

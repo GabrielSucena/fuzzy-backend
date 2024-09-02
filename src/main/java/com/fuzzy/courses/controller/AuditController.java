@@ -19,7 +19,7 @@ public class AuditController {
     private AuditService auditService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity<List<ListAuditsDto>> listAudits(){
 
         var audits = auditService.listAudits();
@@ -29,7 +29,7 @@ public class AuditController {
     }
 
     @GetMapping("/colaborador/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity<List<ListAuditsDto>> listAuditsByCollaborator(@PathVariable Long id){
 
         var audits = auditService.listAuditsByCollaborator(id);
@@ -39,7 +39,7 @@ public class AuditController {
     }
 
     @GetMapping("/curso/{id}")
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity<List<ListAuditsDto>> listAuditsByCourse(@PathVariable Long id){
 
         var audits = auditService.listAuditsByCourse(id);
