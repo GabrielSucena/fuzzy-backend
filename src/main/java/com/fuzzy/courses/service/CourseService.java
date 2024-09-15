@@ -167,7 +167,7 @@ public class CourseService {
         if (dto.collaboratorsId() != null) {
             for (Long collaboratorId : dto.collaboratorsId()) {
 
-                auditDeleteCollaboratorCourse(user, id, collaboratorId);
+                auditDeleteCollaboratorCourse(user, id, collaboratorId, dto);
 
                 var collaboratorIsPresent = collaboratorRepository.findById(collaboratorId);
 
@@ -190,7 +190,7 @@ public class CourseService {
 
                 for(Collaborator collaborator : collaborators){
 
-                    auditDeleteCollaboratorCourse(user, id, collaborator.getId());
+                    auditDeleteCollaboratorCourse(user, id, collaborator.getId(), dto);
 
                     var course = courseRepository.getReferenceById(id);
 
@@ -299,6 +299,8 @@ public class CourseService {
 
         var oldCourse = courseRepository.getReferenceById(id);
 
+        System.out.println(dto.reason());
+
         var audit = new AuditDto(user.getName(), id, null ,null, null, true, oldCourse.getVersion(), dto.reason());
 
         auditRepository.save(audit.toAudit(audit));
@@ -315,11 +317,11 @@ public class CourseService {
 
     }
 
-    private void auditDeleteCollaboratorCourse(Collaborator user, Long id, Long collaboratorId) {
+    private void auditDeleteCollaboratorCourse(Collaborator user, Long id, Long collaboratorId, RemoveCollaboratorDto dto) {
 
         var course = courseRepository.getReferenceById(id);
 
-        var audit = new AuditDto(user.getName(), id, collaboratorId , null, null, true, course.getVersion(), null);
+        var audit = new AuditDto(user.getName(), id, collaboratorId , null, null, true, course.getVersion(), dto.reason());
 
         auditRepository.save(audit.toAudit(audit));
 

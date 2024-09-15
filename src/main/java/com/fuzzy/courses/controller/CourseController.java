@@ -72,7 +72,7 @@ public class CourseController {
     @DeleteMapping("{id}")
     @Transactional
     @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
-    public ResponseEntity<Course> deleteCourse(@PathVariable Long id, AuditDeleteDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
+    public ResponseEntity<Course> deleteCourse(@PathVariable Long id, @RequestBody @Valid AuditDeleteDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
 
         courseService.deleteCourse(id, dto, jwtAuthenticationToken);
 
