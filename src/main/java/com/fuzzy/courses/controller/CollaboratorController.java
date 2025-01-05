@@ -25,7 +25,7 @@ public class CollaboratorController {
 
     @PostMapping
     @Transactional
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity<RegisterCollaboratorDto> registerCollaborator(@RequestBody @Valid RegisterCollaboratorDto dto, UriComponentsBuilder uriBuilder) {
 
         var collaborator = collaboratorService.registerCollaborator(dto);
@@ -65,9 +65,20 @@ public class CollaboratorController {
 
     }
 
+    @PatchMapping("{id}")
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
+    public ResponseEntity<PatchCollaboratorDto> patchCollaborator(@PathVariable Long id, @RequestBody @Valid PatchCollaboratorDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
+
+        collaboratorService.patchCollaborator(id, dto, jwtAuthenticationToken);
+
+        return ResponseEntity.noContent().build();
+
+    }
+
     @DeleteMapping("{id}")
     @Transactional
-    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin', 'SCOPE_manager')")
     public ResponseEntity<Collaborator> deleteCollaborator(@PathVariable Long id, JwtAuthenticationToken jwtAuthenticationToken, @RequestBody @Valid AuditDeleteDto dto) {
 
         collaboratorService.deleteCollaborator(id, dto, jwtAuthenticationToken);

@@ -167,7 +167,7 @@ public class CourseService {
         if (dto.collaboratorsId() != null) {
             for (Long collaboratorId : dto.collaboratorsId()) {
 
-                auditDeleteCollaboratorCourse(user, id, collaboratorId);
+                auditDeleteCollaboratorCourse(user, id, collaboratorId, dto);
 
                 var collaboratorIsPresent = collaboratorRepository.findById(collaboratorId);
 
@@ -190,7 +190,7 @@ public class CourseService {
 
                 for(Collaborator collaborator : collaborators){
 
-                    auditDeleteCollaboratorCourse(user, id, collaborator.getId());
+                    auditDeleteCollaboratorCourse(user, id, collaborator.getId(), dto);
 
                     var course = courseRepository.getReferenceById(id);
 
@@ -240,31 +240,7 @@ public class CourseService {
 
     }
 
-    public void alterStatusByRegister(Long id, AlterStatusByRegisterDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
-
-        var user = getCollaborator(jwtAuthenticationToken);
-        var course = courseRepository.getReferenceById(id);
-
-        for(String register : dto.registers()) {
-            var collaborator = collaboratorRepository.findByRegister(register);
-
-            if (collaborator.isEmpty()){
-                throw new FuzzyNotFoundException("Collaborator with register " + register + " not found");
-            }
-
-            auditalterStatusByRegister(user, id, collaborator.get());
-
-            var courseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator.get()));
-            var status = statusRepository.findByStatus("Realizado");
-
-            courseCollaborator.setStatus(status);
-            courseCollaborator.setCompletedDate(LocalDate.now());
-
-            courseCollaboratorRepository.save(courseCollaborator);
-
-        }
-
-    }
+    // Audits
 
     private Collaborator getCollaborator(JwtAuthenticationToken jwtAuthenticationToken) {
         var user = collaboratorRepository.getReferenceById(Long.parseLong(jwtAuthenticationToken.getName()));
@@ -279,41 +255,41 @@ public class CourseService {
         List<String> oldValues = new ArrayList<>();
 
         if(!oldCourse.getInstructor().equals(dto.instructor())){
-            changedField.add("Instructor");
+            changedField.add("Instrutor");
             oldValues.add(oldCourse.getInstructor());
         }
 
         if(!oldCourse.getTitle().equals(dto.title())){
-            changedField.add("Title");
+            changedField.add("Título");
             oldValues.add(oldCourse.getTitle());
         }
 
         if(!oldCourse.getWorkload().equals(dto.workload())){
-            changedField.add("Workload");
+            changedField.add("Carga Horária");
             oldValues.add(oldCourse.getWorkload());
         }
 
         if(!oldCourse.getCodification().equals(dto.codification())){
-            changedField.add("Codification");
+            changedField.add("Codificação");
             oldValues.add(oldCourse.getCodification());
         }
 
         if(!oldCourse.getDescription().equals(dto.description())){
-            changedField.add("Description");
+            changedField.add("Descrição");
             oldValues.add(oldCourse.getDescription());
         }
 
         if(!oldCourse.getStartDate().equals(dto.startDate())){
-            changedField.add("Start Date");
+            changedField.add("Data de Início");
             oldValues.add(oldCourse.getStartDate().toString());
         }
 
         if(!Objects.equals(oldCourse.getValidityYears(), dto.validityYears())){
-            changedField.add("Validity Years");
+            changedField.add("Validade");
             oldValues.add(oldCourse.getValidityYears().toString());
         }
 
-        var audit = new AuditDto(user.getName(), id, null,changedField.toString(), oldValues.toString(), false, oldCourse.getVersion(), null);
+        var audit = new AuditDto(user.getName(), id, null,changedField.toString(), oldValues.toString(), false, oldCourse.getVersion(), dto.reason());
 
         auditRepository.save(audit.toAudit(audit));
 
@@ -322,6 +298,8 @@ public class CourseService {
     private void auditDelete(Collaborator user, Long id, AuditDeleteDto dto) {
 
         var oldCourse = courseRepository.getReferenceById(id);
+
+        System.out.println(dto.reason());
 
         var audit = new AuditDto(user.getName(), id, null ,null, null, true, oldCourse.getVersion(), dto.reason());
 
@@ -339,11 +317,11 @@ public class CourseService {
 
     }
 
-    private void auditDeleteCollaboratorCourse(Collaborator user, Long id, Long collaboratorId) {
+    private void auditDeleteCollaboratorCourse(Collaborator user, Long id, Long collaboratorId, RemoveCollaboratorDto dto) {
 
         var course = courseRepository.getReferenceById(id);
 
-        var audit = new AuditDto(user.getName(), id, collaboratorId , null, null, true, course.getVersion(), null);
+        var audit = new AuditDto(user.getName(), id, collaboratorId , null, null, true, course.getVersion(), dto.reason());
 
         auditRepository.save(audit.toAudit(audit));
 
@@ -360,7 +338,7 @@ public class CourseService {
         List<String> oldValues = new ArrayList<>();
 
         if(dto.classificationId() != null && !Objects.equals(oldCourseCollaborator.getClassification().getId(), dto.classificationId())){
-            changedField.add("Classification");
+            changedField.add("Classificação");
             oldValues.add(oldCourseCollaborator.getClassification().getClassification());
         }
 
@@ -372,22 +350,5 @@ public class CourseService {
         var audit = new AuditDto(user.getName(), id, dto.collaboratorId(), changedField.toString(), oldValues.toString(), false, course.getVersion(), null);
 
         auditRepository.save(audit.toAudit(audit));
-    }
-
-    private void auditalterStatusByRegister(Collaborator user, Long id, Collaborator collaborator) {
-
-        var course = courseRepository.getReferenceById(id);
-        var oldCourseCollaborator = courseCollaboratorRepository.getReferenceById(new CourseCollaboratorPK(course, collaborator));
-
-        List<String> changedField = new ArrayList<>();
-        List<String> oldValues = new ArrayList<>();
-
-        changedField.add("Status");
-        oldValues.add(oldCourseCollaborator.getStatus().getStatus());
-
-        var audit = new AuditDto(user.getName(), id, collaborator.getId(), changedField.toString(), oldValues.toString(), false, course.getVersion(), null);
-
-        auditRepository.save(audit.toAudit(audit));
-
     }
 }

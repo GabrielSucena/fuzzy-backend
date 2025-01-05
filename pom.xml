@@ -93,6 +93,23 @@
 		</dependency>
 
 		<!-- Oracle -->
+		<!-- PDF -->
+
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.22</version>
+		</dependency>
+
+		<!-- PDF -->
+		<!-- Mail Sender -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+		<!-- Mail Sender -->
 	</dependencies>
 
 	<build>

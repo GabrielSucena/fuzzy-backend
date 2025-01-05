@@ -24,4 +24,15 @@ public class AuditService {
 
     }
 
+    public List<ListAuditsDto> listAuditsByCollaborator(Long id) {
+
+        return auditRepository.findByCollaborator(id);
+
+    }
+
+    public List<ListAuditsDto> listAuditsByCourse(Long id) {
+
+        return auditRepository.findByCourse(id);
+
+    }
 }

@@ -46,4 +46,29 @@ public interface CourseCollaboratorRepository extends JpaRepository<CourseCollab
             nativeQuery=true)
     List<ListCollaboratorsInCourseDto> listCollaborators(Long id);
 
+    @Query(
+            value = """
+                    SELECT C.course_title
+                    FROM courses_collaborators CC
+                    JOIN courses C
+                    ON CC.course_id = C.id
+                    WHERE CC.collaborator_id = :id
+                    AND cc.status_id = 2
+                    """,
+            nativeQuery=true
+    )
+    List<String> findUserCourses(Long id);
+
+    @Query(
+            value = """
+                    SELECT c.id
+                    FROM courses_collaborators CC
+                    JOIN collaborators C
+                    ON cc.collaborator_id = C.id
+                    WHERE cc.course_id = :id
+                    AND cc.status_id = 2
+                    """,
+            nativeQuery=true
+    )
+    List<Long> findUsersWithPending(Long id);
 }

@@ -63,10 +63,10 @@ public class CollaboratorService {
         var department = departmentRepository.getReferenceById(dto.departmentId());
         var role = roleRepository.findByName("basic");
 
-        var departmentAdmin = departmentRepository.findByDepartment("Qualidade P&D");
+        var departmentManager = departmentRepository.findByDepartment("Qualidade P&D");
 
-        if (department == departmentAdmin){
-            role = roleRepository.findByName("admin");
+        if (department == departmentManager){
+            role = roleRepository.findByName("manager");
         }
 
         var password = passwordEncoder.encode(dto.register());
@@ -125,6 +125,20 @@ public class CollaboratorService {
                 .orElseThrow(() -> new FuzzyNotFoundException("Collaborator with id " + id + " not found"));
     }
 
+    public void patchCollaborator(Long id, PatchCollaboratorDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
+
+        var user = getCollaborator(jwtAuthenticationToken);
+
+        auditPatch(user, id, dto);
+
+        collaboratorRepository.findById(id)
+                .map(collaborator -> {
+                    collaborator.setName(dto.name());
+                    return collaboratorRepository.save(collaborator);
+                })
+                .orElseThrow(() -> new FuzzyNotFoundException("Collaborator with id " + id + " not found"));
+    }
+
     public void deleteCollaborator(Long id, AuditDeleteDto dto, JwtAuthenticationToken jwtAuthenticationToken) {
 
         var user = getCollaborator(jwtAuthenticationToken);
@@ -139,6 +153,8 @@ public class CollaboratorService {
                 .orElseThrow( () -> new FuzzyNotFoundException("Collaborator with id " + id + " not found"));
     }
 
+    // Audits
+
     private Collaborator getCollaborator(JwtAuthenticationToken jwtAuthenticationToken) {
         var user = collaboratorRepository.getReferenceById(Long.parseLong(jwtAuthenticationToken.getName()));
         return user;
@@ -151,21 +167,38 @@ public class CollaboratorService {
         List<String> oldValues = new ArrayList<>();
 
         if (oldCollaborator.getPosition() != position){
-            changedField.add("Position");
+            changedField.add("Posição");
             oldValues.add(oldCollaborator.getPosition().getPosition());
         }
 
         if (oldCollaborator.getDepartment() != department){
-            changedField.add("Department");
+            changedField.add("Departamento");
             oldValues.add(oldCollaborator.getDepartment().getDepartment());
         }
 
         if (!oldCollaborator.getName().equals(dto.name())){
-            changedField.add("Name");
+            changedField.add("Nome");
             oldValues.add(oldCollaborator.getName());
         }
 
-        var audit = new AuditDto(user.getName(), null, id ,changedField.toString(), oldValues.toString(), false, null, null);
+        var audit = new AuditDto(user.getName(), null, id ,changedField.toString(), oldValues.toString(), false, null, dto.reason());
+
+        auditRepository.save(audit.toAudit(audit));
+    }
+
+    private void auditPatch(Collaborator user, Long id, PatchCollaboratorDto dto) {
+
+        var oldCollaborator = collaboratorRepository.getReferenceById(id);
+
+        List<String> changedField = new ArrayList<>();
+        List<String> oldValues = new ArrayList<>();
+
+        if (!oldCollaborator.getName().equals(dto.name())){
+            changedField.add("Nome");
+            oldValues.add(oldCollaborator.getName());
+        }
+
+        var audit = new AuditDto(user.getName(), null, id ,changedField.toString(), oldValues.toString(), false, null, dto.reason());
 
         auditRepository.save(audit.toAudit(audit));
     }

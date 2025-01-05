@@ -12,6 +12,8 @@ public record UpdateCollaboratorDto(
         @NotNull
         Long positionId,
         @NotNull
-        Long departmentId
+        Long departmentId,
+        @NotBlank
+        String reason
 ) {
 }
